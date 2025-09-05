@@ -1,0 +1,1082 @@
+{
+    "userId": "1f325eac-4fcd-48f0-bdf1-7babd53258d1",
+    "userName": "лиза",
+    "creationDate": "2025-08-24T16:06:01.6224164Z",
+    "lastPlayedDate": "2025-09-05T06:21:26.6052533Z",
+    "statsByGame": [
+        {
+            "gameId": "GameScene",
+            "sessionHistory": [
+                {
+                    "sessionId": "0d6c2a6f-8045-4c6d-9ae0-de2fa86d32b0",
+                    "startTime": "2025-08-24T16:06:20.4485274Z",
+                    "durationInSeconds": 14.082075119018555,
+                    "correctActions": 5,
+                    "incorrectActions": 0,
+                    "levelCompleted": true,
+                    "attempts": [
+                        {
+                            "holdDurationMs": 1982.35205078125,
+                            "success": true,
+                            "correctChoice": false
+                        },
+                        {
+                            "holdDurationMs": 2012.510498046875,
+                            "success": true,
+                            "correctChoice": false
+                        },
+                        {
+                            "holdDurationMs": 1995.742431640625,
+                            "success": true,
+                            "correctChoice": false
+                        },
+                        {
+                            "holdDurationMs": 2800.716796875,
+                            "success": true,
+                            "correctChoice": false
+                        },
+                        {
+                            "holdDurationMs": 1998.5921630859375,
+                            "success": true,
+                            "correctChoice": false
+                        }
+                    ],
+                    "timeToFirstSelection": 3.117445468902588,
+                    "difficulty": "easy",
+                    "timeToFirstCorrectAction": 0.0,
+                    "missed": 0,
+                    "caught": 0,
+                    "errors": 0,
+                    "correctPairs": 0,
+                    "score": 0
+                },
+                {
+                    "sessionId": "f85e7572-62c6-48fb-b691-3893d439c25b",
+                    "startTime": "2025-08-26T19:06:43.5544992Z",
+                    "durationInSeconds": 13.126811027526856,
+                    "correctActions": 5,
+                    "incorrectActions": 0,
+                    "levelCompleted": true,
+                    "attempts": [
+                        {
+                            "holdDurationMs": 581.6986083984375,
+                            "success": false,
+                            "correctChoice": false
+                        },
+                        {
+                            "holdDurationMs": 1979.9697265625,
+                            "success": true,
+                            "correctChoice": false
+                        },
+                        {
+                            "holdDurationMs": 1996.1019287109375,
+                            "success": true,
+                            "correctChoice": false
+                        },
+                        {
+                            "holdDurationMs": 1996.4169921875,
+                            "success": true,
+                            "correctChoice": false
+                        },
+                        {
+                            "holdDurationMs": 2000.5648193359375,
+                            "success": true,
+                            "correctChoice": false
+                        },
+                        {
+                            "holdDurationMs": 2008.05908203125,
+                            "success": true,
+                            "correctChoice": false
+                        }
+                    ],
+                    "timeToFirstSelection": 3.0084147453308107,
+                    "difficulty": "easy",
+                    "timeToFirstCorrectAction": 0.0,
+                    "missed": 0,
+                    "caught": 0,
+                    "errors": 0,
+                    "correctPairs": 0,
+                    "score": 0
+                },
+                {
+                    "sessionId": "0ddbed2f-4dd5-406b-8385-a2dc34ae0088",
+                    "startTime": "2025-09-01T02:44:35.0400641Z",
+                    "durationInSeconds": 14.892064094543457,
+                    "correctActions": 5,
+                    "incorrectActions": 0,
+                    "levelCompleted": true,
+                    "attempts": [
+                        {
+                            "holdDurationMs": 1341.525146484375,
+                            "success": false,
+                            "correctChoice": false
+                        },
+                        {
+                            "holdDurationMs": 1999.62939453125,
+                            "success": true,
+                            "correctChoice": false
+                        },
+                        {
+                            "holdDurationMs": 1995.9805908203125,
+                            "success": true,
+                            "correctChoice": false
+                        },
+                        {
+                            "holdDurationMs": 1995.4110107421875,
+                            "success": true,
+                            "correctChoice": false
+                        },
+                        {
+                            "holdDurationMs": 1995.7763671875,
+                            "success": true,
+                            "correctChoice": false
+                        },
+                        {
+                            "holdDurationMs": 2004.35791015625,
+                            "success": true,
+                            "correctChoice": false
+                        }
+                    ],
+                    "timeToFirstSelection": 4.702725887298584,
+                    "difficulty": "easy",
+                    "timeToFirstCorrectAction": 0.0,
+                    "missed": 0,
+                    "caught": 0,
+                    "errors": 0,
+                    "correctPairs": 0,
+                    "score": 0
+                },
+                {
+                    "sessionId": "63a6b1ec-514b-46fb-a237-496e2454ab72",
+                    "startTime": "2025-09-04T19:32:52.2363138Z",
+                    "durationInSeconds": 16.023513793945314,
+                    "correctActions": 5,
+                    "incorrectActions": 0,
+                    "levelCompleted": true,
+                    "attempts": [
+                        {
+                            "holdDurationMs": 1458.36181640625,
+                            "success": false,
+                            "correctChoice": false
+                        },
+                        {
+                            "holdDurationMs": 2060.689208984375,
+                            "success": true,
+                            "correctChoice": false
+                        },
+                        {
+                            "holdDurationMs": 2000.0758056640625,
+                            "success": true,
+                            "correctChoice": false
+                        },
+                        {
+                            "holdDurationMs": 1999.3790283203125,
+                            "success": true,
+                            "correctChoice": false
+                        },
+                        {
+                            "holdDurationMs": 2001.35595703125,
+                            "success": true,
+                            "correctChoice": false
+                        },
+                        {
+                            "holdDurationMs": 2005.666015625,
+                            "success": true,
+                            "correctChoice": false
+                        }
+                    ],
+                    "timeToFirstSelection": 4.641134738922119,
+                    "difficulty": "easy",
+                    "timeToFirstCorrectAction": 0.0,
+                    "missed": 0,
+                    "caught": 0,
+                    "errors": 0,
+                    "correctPairs": 0,
+                    "score": 0
+                }
+            ]
+        },
+        {
+            "gameId": "ButterflyGameScene",
+            "sessionHistory": [
+                {
+                    "sessionId": "c05fe810-d157-4966-8508-c2785ae9e8be",
+                    "startTime": "2025-08-24T16:23:30.0382814Z",
+                    "durationInSeconds": 22.414419174194337,
+                    "correctActions": 6,
+                    "incorrectActions": 0,
+                    "levelCompleted": true,
+                    "attempts": [
+                        {
+                            "holdDurationMs": 1998.3736572265625,
+                            "success": true,
+                            "correctChoice": true
+                        },
+                        {
+                            "holdDurationMs": 2000.30859375,
+                            "success": true,
+                            "correctChoice": true
+                        },
+                        {
+                            "holdDurationMs": 1999.131103515625,
+                            "success": true,
+                            "correctChoice": true
+                        },
+                        {
+                            "holdDurationMs": 2001.507080078125,
+                            "success": true,
+                            "correctChoice": true
+                        },
+                        {
+                            "holdDurationMs": 1998.6746826171875,
+                            "success": true,
+                            "correctChoice": true
+                        },
+                        {
+                            "holdDurationMs": 4065.4150390625,
+                            "success": false,
+                            "correctChoice": false
+                        },
+                        {
+                            "holdDurationMs": 1975.3372802734375,
+                            "success": true,
+                            "correctChoice": true
+                        }
+                    ],
+                    "timeToFirstSelection": 3.335466146469116,
+                    "difficulty": "easy",
+                    "timeToFirstCorrectAction": 0.0,
+                    "missed": 0,
+                    "caught": 0,
+                    "errors": 0,
+                    "correctPairs": 0,
+                    "score": 0
+                },
+                {
+                    "sessionId": "2210a2ab-179a-4cff-bfba-51fca74b7748",
+                    "startTime": "2025-09-01T02:46:46.1324793Z",
+                    "durationInSeconds": 16.682109832763673,
+                    "correctActions": 6,
+                    "incorrectActions": 0,
+                    "levelCompleted": true,
+                    "attempts": [
+                        {
+                            "holdDurationMs": 1992.0023193359375,
+                            "success": true,
+                            "correctChoice": true
+                        },
+                        {
+                            "holdDurationMs": 1995.3736572265625,
+                            "success": true,
+                            "correctChoice": true
+                        },
+                        {
+                            "holdDurationMs": 1991.633056640625,
+                            "success": true,
+                            "correctChoice": true
+                        },
+                        {
+                            "holdDurationMs": 2000.19140625,
+                            "success": true,
+                            "correctChoice": true
+                        },
+                        {
+                            "holdDurationMs": 1994.2222900390625,
+                            "success": true,
+                            "correctChoice": true
+                        },
+                        {
+                            "holdDurationMs": 1995.4718017578125,
+                            "success": true,
+                            "correctChoice": true
+                        }
+                    ],
+                    "timeToFirstSelection": 3.141845226287842,
+                    "difficulty": "easy",
+                    "timeToFirstCorrectAction": 0.0,
+                    "missed": 0,
+                    "caught": 0,
+                    "errors": 0,
+                    "correctPairs": 0,
+                    "score": 0
+                }
+            ]
+        },
+        {
+            "gameId": "Fish",
+            "sessionHistory": [
+                {
+                    "sessionId": "43d32dce-af71-4c1d-8d35-166a35950220",
+                    "startTime": "2025-09-01T02:45:18.9373661Z",
+                    "durationInSeconds": 59.477203369140628,
+                    "correctActions": 14,
+                    "incorrectActions": 0,
+                    "levelCompleted": false,
+                    "attempts": [
+                        {
+                            "holdDurationMs": 1992.1204833984375,
+                            "success": true,
+                            "correctChoice": true
+                        },
+                        {
+                            "holdDurationMs": 2000.467041015625,
+                            "success": true,
+                            "correctChoice": true
+                        },
+                        {
+                            "holdDurationMs": 1995.9993896484375,
+                            "success": true,
+                            "correctChoice": true
+                        },
+                        {
+                            "holdDurationMs": 2000.600341796875,
+                            "success": true,
+                            "correctChoice": true
+                        },
+                        {
+                            "holdDurationMs": 1988.192626953125,
+                            "success": true,
+                            "correctChoice": true
+                        },
+                        {
+                            "holdDurationMs": 1988.095947265625,
+                            "success": true,
+                            "correctChoice": true
+                        },
+                        {
+                            "holdDurationMs": 1997.5928955078125,
+                            "success": true,
+                            "correctChoice": true
+                        },
+                        {
+                            "holdDurationMs": 1992.7987060546875,
+                            "success": true,
+                            "correctChoice": true
+                        },
+                        {
+                            "holdDurationMs": 1996.3077392578125,
+                            "success": true,
+                            "correctChoice": true
+                        },
+                        {
+                            "holdDurationMs": 2007.060791015625,
+                            "success": true,
+                            "correctChoice": true
+                        },
+                        {
+                            "holdDurationMs": 1993.6529541015625,
+                            "success": true,
+                            "correctChoice": true
+                        },
+                        {
+                            "holdDurationMs": 1997.0079345703125,
+                            "success": true,
+                            "correctChoice": true
+                        },
+                        {
+                            "holdDurationMs": 1999.1285400390625,
+                            "success": true,
+                            "correctChoice": true
+                        },
+                        {
+                            "holdDurationMs": 1999.2840576171875,
+                            "success": true,
+                            "correctChoice": true
+                        }
+                    ],
+                    "timeToFirstSelection": 3.193877935409546,
+                    "difficulty": "easy",
+                    "timeToFirstCorrectAction": 0.0,
+                    "missed": 0,
+                    "caught": 0,
+                    "errors": 0,
+                    "correctPairs": 0,
+                    "score": 0
+                },
+                {
+                    "sessionId": "0a9e8487-1ca4-4198-b74a-99cacee3b4ec",
+                    "startTime": "2025-09-04T19:33:20.2788215Z",
+                    "durationInSeconds": 59.579959869384769,
+                    "correctActions": 5,
+                    "incorrectActions": 4,
+                    "levelCompleted": true,
+                    "attempts": [
+                        {
+                            "holdDurationMs": 579.9649047851563,
+                            "success": false,
+                            "correctChoice": false
+                        },
+                        {
+                            "holdDurationMs": 1998.2939453125,
+                            "success": true,
+                            "correctChoice": true
+                        },
+                        {
+                            "holdDurationMs": 1997.1092529296875,
+                            "success": true,
+                            "correctChoice": false
+                        },
+                        {
+                            "holdDurationMs": 1996.1796875,
+                            "success": true,
+                            "correctChoice": true
+                        },
+                        {
+                            "holdDurationMs": 1998.092529296875,
+                            "success": true,
+                            "correctChoice": true
+                        },
+                        {
+                            "holdDurationMs": 1995.752197265625,
+                            "success": true,
+                            "correctChoice": true
+                        },
+                        {
+                            "holdDurationMs": 1998.08447265625,
+                            "success": true,
+                            "correctChoice": true
+                        }
+                    ],
+                    "timeToFirstSelection": 3.7163705825805666,
+                    "difficulty": "hard",
+                    "timeToFirstCorrectAction": 0.0,
+                    "missed": 3,
+                    "caught": 0,
+                    "errors": 0,
+                    "correctPairs": 0,
+                    "score": 0
+                },
+                {
+                    "sessionId": "3beb2b84-3dc8-46a1-8ffc-d3849b532ce6",
+                    "startTime": "2025-09-05T02:37:04.3406293Z",
+                    "durationInSeconds": 59.620384216308597,
+                    "correctActions": 9,
+                    "incorrectActions": 3,
+                    "levelCompleted": true,
+                    "attempts": [
+                        {
+                            "holdDurationMs": 466.9231872558594,
+                            "success": false,
+                            "correctChoice": false
+                        },
+                        {
+                            "holdDurationMs": 888.0330810546875,
+                            "success": false,
+                            "correctChoice": false
+                        },
+                        {
+                            "holdDurationMs": 2001.1722412109375,
+                            "success": true,
+                            "correctChoice": false
+                        },
+                        {
+                            "holdDurationMs": 1994.384033203125,
+                            "success": true,
+                            "correctChoice": true
+                        },
+                        {
+                            "holdDurationMs": 1997.1285400390625,
+                            "success": true,
+                            "correctChoice": false
+                        },
+                        {
+                            "holdDurationMs": 1987.2802734375,
+                            "success": true,
+                            "correctChoice": false
+                        },
+                        {
+                            "holdDurationMs": 1997.8482666015625,
+                            "success": true,
+                            "correctChoice": true
+                        },
+                        {
+                            "holdDurationMs": 1998.904052734375,
+                            "success": true,
+                            "correctChoice": true
+                        },
+                        {
+                            "holdDurationMs": 1998.0989990234375,
+                            "success": true,
+                            "correctChoice": true
+                        },
+                        {
+                            "holdDurationMs": 1994.6776123046875,
+                            "success": true,
+                            "correctChoice": true
+                        },
+                        {
+                            "holdDurationMs": 1996.608642578125,
+                            "success": true,
+                            "correctChoice": true
+                        },
+                        {
+                            "holdDurationMs": 1995.66796875,
+                            "success": true,
+                            "correctChoice": true
+                        },
+                        {
+                            "holdDurationMs": 1996.8525390625,
+                            "success": true,
+                            "correctChoice": true
+                        },
+                        {
+                            "holdDurationMs": 1997.044189453125,
+                            "success": true,
+                            "correctChoice": true
+                        }
+                    ],
+                    "timeToFirstSelection": 4.91854190826416,
+                    "difficulty": "easy",
+                    "timeToFirstCorrectAction": 0.0,
+                    "missed": 0,
+                    "caught": 0,
+                    "errors": 0,
+                    "correctPairs": 0,
+                    "score": 0
+                }
+            ]
+        },
+        {
+            "gameId": "Snowflakes",
+            "sessionHistory": [
+                {
+                    "sessionId": "ee86dec3-3cc9-4f1c-af5e-2fe0716d2cf8",
+                    "startTime": "2025-09-04T19:03:45.3010948Z",
+                    "durationInSeconds": 11.298919677734375,
+                    "correctActions": 13,
+                    "incorrectActions": 0,
+                    "levelCompleted": true,
+                    "attempts": [],
+                    "timeToFirstSelection": 0.0,
+                    "difficulty": "easy",
+                    "timeToFirstCorrectAction": 0.0,
+                    "missed": 0,
+                    "caught": 0,
+                    "errors": 0,
+                    "correctPairs": 0,
+                    "score": 0
+                },
+                {
+                    "sessionId": "a5d0c534-2e21-4742-b120-20d41ea94510",
+                    "startTime": "2025-09-04T19:36:21.2083794Z",
+                    "durationInSeconds": 11.636086463928223,
+                    "correctActions": 13,
+                    "incorrectActions": 0,
+                    "levelCompleted": true,
+                    "attempts": [],
+                    "timeToFirstSelection": 0.0,
+                    "difficulty": "easy",
+                    "timeToFirstCorrectAction": 0.0,
+                    "missed": 0,
+                    "caught": 0,
+                    "errors": 0,
+                    "correctPairs": 0,
+                    "score": 0
+                }
+            ]
+        },
+        {
+            "gameId": "MemoryMatchScene",
+            "sessionHistory": [
+                {
+                    "sessionId": "a4c307a2-41b5-42a2-b255-dc749a5d70b1",
+                    "startTime": "2025-09-04T19:04:20.2334488Z",
+                    "durationInSeconds": 11.463638305664063,
+                    "correctActions": 2,
+                    "incorrectActions": 1,
+                    "levelCompleted": true,
+                    "attempts": [],
+                    "timeToFirstSelection": 0.0,
+                    "difficulty": "4",
+                    "timeToFirstCorrectAction": 7.601497650146484,
+                    "missed": 0,
+                    "caught": 0,
+                    "errors": 1,
+                    "correctPairs": 2,
+                    "score": 0
+                },
+                {
+                    "sessionId": "3d1b8abd-2679-4857-8114-3806fa73eaeb",
+                    "startTime": "2025-09-04T19:36:48.3609987Z",
+                    "durationInSeconds": 30.03052520751953,
+                    "correctActions": 6,
+                    "incorrectActions": 2,
+                    "levelCompleted": true,
+                    "attempts": [],
+                    "timeToFirstSelection": 0.0,
+                    "difficulty": "12",
+                    "timeToFirstCorrectAction": 3.436279296875,
+                    "missed": 0,
+                    "caught": 0,
+                    "errors": 2,
+                    "correctPairs": 6,
+                    "score": 0
+                }
+            ]
+        },
+        {
+            "gameId": "FrutGame",
+            "sessionHistory": [
+                {
+                    "sessionId": "d473a40d-8bd4-4ff4-8eea-547e57808d89",
+                    "startTime": "2025-09-04T19:04:39.2503841Z",
+                    "durationInSeconds": 29.154312133789064,
+                    "correctActions": 15,
+                    "incorrectActions": 0,
+                    "levelCompleted": true,
+                    "attempts": [
+                        {
+                            "holdDurationMs": 383.9841003417969,
+                            "success": false,
+                            "correctChoice": false
+                        }
+                    ],
+                    "timeToFirstSelection": 0.0,
+                    "difficulty": "easy",
+                    "timeToFirstCorrectAction": 0.0,
+                    "missed": 0,
+                    "caught": 0,
+                    "errors": 0,
+                    "correctPairs": 0,
+                    "score": 15
+                },
+                {
+                    "sessionId": "d1716f6a-8334-49ff-a70c-b1785e575a43",
+                    "startTime": "2025-09-04T19:37:25.4897997Z",
+                    "durationInSeconds": 29.38014030456543,
+                    "correctActions": 16,
+                    "incorrectActions": 0,
+                    "levelCompleted": true,
+                    "attempts": [],
+                    "timeToFirstSelection": 0.0,
+                    "difficulty": "easy",
+                    "timeToFirstCorrectAction": 0.0,
+                    "missed": 0,
+                    "caught": 0,
+                    "errors": 0,
+                    "correctPairs": 0,
+                    "score": 16
+                }
+            ]
+        },
+        {
+            "gameId": "HardButterflyGameScene",
+            "sessionHistory": [
+                {
+                    "sessionId": "3b9a8ed1-97cc-4f21-b7a8-df23d8d5811c",
+                    "startTime": "2025-09-04T19:35:08.0086827Z",
+                    "durationInSeconds": 59.364501953125,
+                    "correctActions": 11,
+                    "incorrectActions": 0,
+                    "levelCompleted": true,
+                    "attempts": [
+                        {
+                            "holdDurationMs": 2015.2132568359375,
+                            "success": true,
+                            "correctChoice": true
+                        },
+                        {
+                            "holdDurationMs": 1996.4080810546875,
+                            "success": false,
+                            "correctChoice": true
+                        },
+                        {
+                            "holdDurationMs": 1998.9508056640625,
+                            "success": true,
+                            "correctChoice": true
+                        },
+                        {
+                            "holdDurationMs": 1995.4801025390625,
+                            "success": true,
+                            "correctChoice": true
+                        },
+                        {
+                            "holdDurationMs": 277.9255065917969,
+                            "success": false,
+                            "correctChoice": false
+                        },
+                        {
+                            "holdDurationMs": 1996.0172119140625,
+                            "success": true,
+                            "correctChoice": true
+                        },
+                        {
+                            "holdDurationMs": 1997.5078125,
+                            "success": true,
+                            "correctChoice": true
+                        },
+                        {
+                            "holdDurationMs": 1998.64501953125,
+                            "success": true,
+                            "correctChoice": true
+                        },
+                        {
+                            "holdDurationMs": 542.3118286132813,
+                            "success": false,
+                            "correctChoice": false
+                        },
+                        {
+                            "holdDurationMs": 1997.2650146484375,
+                            "success": true,
+                            "correctChoice": true
+                        },
+                        {
+                            "holdDurationMs": 1997.1009521484375,
+                            "success": true,
+                            "correctChoice": true
+                        },
+                        {
+                            "holdDurationMs": 537.026123046875,
+                            "success": false,
+                            "correctChoice": false
+                        },
+                        {
+                            "holdDurationMs": 1996.2430419921875,
+                            "success": true,
+                            "correctChoice": true
+                        },
+                        {
+                            "holdDurationMs": 1993.6712646484375,
+                            "success": true,
+                            "correctChoice": true
+                        },
+                        {
+                            "holdDurationMs": 342.722900390625,
+                            "success": false,
+                            "correctChoice": false
+                        },
+                        {
+                            "holdDurationMs": 1996.5662841796875,
+                            "success": false,
+                            "correctChoice": true
+                        },
+                        {
+                            "holdDurationMs": 1998.7645263671875,
+                            "success": true,
+                            "correctChoice": true
+                        },
+                        {
+                            "holdDurationMs": 555.4926147460938,
+                            "success": false,
+                            "correctChoice": false
+                        },
+                        {
+                            "holdDurationMs": 1996.0926513671875,
+                            "success": false,
+                            "correctChoice": true
+                        }
+                    ],
+                    "timeToFirstSelection": 3.099789619445801,
+                    "difficulty": "hard",
+                    "timeToFirstCorrectAction": 0.0,
+                    "missed": 0,
+                    "caught": 0,
+                    "errors": 0,
+                    "correctPairs": 0,
+                    "score": 0
+                },
+                {
+                    "sessionId": "86cd7970-1760-4c24-bd98-14490c0e942f",
+                    "startTime": "2025-09-05T01:46:49.3931840Z",
+                    "durationInSeconds": 59.363338470458987,
+                    "correctActions": 10,
+                    "incorrectActions": 0,
+                    "levelCompleted": true,
+                    "attempts": [
+                        {
+                            "holdDurationMs": 277.44390869140627,
+                            "success": false,
+                            "correctChoice": false
+                        },
+                        {
+                            "holdDurationMs": 2002.994140625,
+                            "success": true,
+                            "correctChoice": true
+                        },
+                        {
+                            "holdDurationMs": 469.122802734375,
+                            "success": false,
+                            "correctChoice": false
+                        },
+                        {
+                            "holdDurationMs": 1996.19970703125,
+                            "success": false,
+                            "correctChoice": true
+                        },
+                        {
+                            "holdDurationMs": 1998.8885498046875,
+                            "success": false,
+                            "correctChoice": true
+                        },
+                        {
+                            "holdDurationMs": 1996.7908935546875,
+                            "success": true,
+                            "correctChoice": true
+                        },
+                        {
+                            "holdDurationMs": 441.7889099121094,
+                            "success": false,
+                            "correctChoice": false
+                        },
+                        {
+                            "holdDurationMs": 1994.348876953125,
+                            "success": true,
+                            "correctChoice": true
+                        },
+                        {
+                            "holdDurationMs": 1999.24609375,
+                            "success": false,
+                            "correctChoice": true
+                        },
+                        {
+                            "holdDurationMs": 1995.19482421875,
+                            "success": true,
+                            "correctChoice": true
+                        },
+                        {
+                            "holdDurationMs": 323.9154052734375,
+                            "success": false,
+                            "correctChoice": false
+                        },
+                        {
+                            "holdDurationMs": 1996.9263916015625,
+                            "success": true,
+                            "correctChoice": true
+                        },
+                        {
+                            "holdDurationMs": 1994.0069580078125,
+                            "success": false,
+                            "correctChoice": true
+                        },
+                        {
+                            "holdDurationMs": 1995.38232421875,
+                            "success": false,
+                            "correctChoice": true
+                        },
+                        {
+                            "holdDurationMs": 1998.751708984375,
+                            "success": false,
+                            "correctChoice": true
+                        },
+                        {
+                            "holdDurationMs": 1996.7154541015625,
+                            "success": true,
+                            "correctChoice": true
+                        },
+                        {
+                            "holdDurationMs": 617.2778930664063,
+                            "success": false,
+                            "correctChoice": false
+                        },
+                        {
+                            "holdDurationMs": 1997.09765625,
+                            "success": true,
+                            "correctChoice": true
+                        },
+                        {
+                            "holdDurationMs": 787.8010864257813,
+                            "success": false,
+                            "correctChoice": false
+                        },
+                        {
+                            "holdDurationMs": 1999.1640625,
+                            "success": true,
+                            "correctChoice": true
+                        },
+                        {
+                            "holdDurationMs": 1997.4530029296875,
+                            "success": false,
+                            "correctChoice": true
+                        },
+                        {
+                            "holdDurationMs": 1990.6834716796875,
+                            "success": false,
+                            "correctChoice": true
+                        },
+                        {
+                            "holdDurationMs": 1998.056884765625,
+                            "success": true,
+                            "correctChoice": true
+                        },
+                        {
+                            "holdDurationMs": 1727.44140625,
+                            "success": false,
+                            "correctChoice": false
+                        },
+                        {
+                            "holdDurationMs": 627.5858764648438,
+                            "success": false,
+                            "correctChoice": false
+                        },
+                        {
+                            "holdDurationMs": 1997.9920654296875,
+                            "success": true,
+                            "correctChoice": true
+                        }
+                    ],
+                    "timeToFirstSelection": 3.3690860271453859,
+                    "difficulty": "hard",
+                    "timeToFirstCorrectAction": 0.0,
+                    "missed": 0,
+                    "caught": 0,
+                    "errors": 0,
+                    "correctPairs": 0,
+                    "score": 0
+                },
+                {
+                    "sessionId": "b736dd2a-3e4f-4ad1-bfa5-adcd518ad2a9",
+                    "startTime": "2025-09-05T06:20:27.2293853Z",
+                    "durationInSeconds": 59.37586975097656,
+                    "correctActions": 15,
+                    "incorrectActions": 5,
+                    "levelCompleted": true,
+                    "attempts": [
+                        {
+                            "holdDurationMs": 378.747802734375,
+                            "success": false,
+                            "correctChoice": false
+                        },
+                        {
+                            "holdDurationMs": 2001.3861083984375,
+                            "success": true,
+                            "correctChoice": true
+                        },
+                        {
+                            "holdDurationMs": 1995.5074462890625,
+                            "success": true,
+                            "correctChoice": false
+                        },
+                        {
+                            "holdDurationMs": 1992.9471435546875,
+                            "success": true,
+                            "correctChoice": true
+                        },
+                        {
+                            "holdDurationMs": 1998.9422607421875,
+                            "success": true,
+                            "correctChoice": false
+                        },
+                        {
+                            "holdDurationMs": 2001.5625,
+                            "success": true,
+                            "correctChoice": true
+                        },
+                        {
+                            "holdDurationMs": 1996.00439453125,
+                            "success": true,
+                            "correctChoice": true
+                        },
+                        {
+                            "holdDurationMs": 506.810302734375,
+                            "success": false,
+                            "correctChoice": false
+                        },
+                        {
+                            "holdDurationMs": 1996.9874267578125,
+                            "success": true,
+                            "correctChoice": true
+                        },
+                        {
+                            "holdDurationMs": 366.46380615234377,
+                            "success": false,
+                            "correctChoice": false
+                        },
+                        {
+                            "holdDurationMs": 1997.3304443359375,
+                            "success": true,
+                            "correctChoice": true
+                        },
+                        {
+                            "holdDurationMs": 1997.9698486328125,
+                            "success": true,
+                            "correctChoice": true
+                        },
+                        {
+                            "holdDurationMs": 1999.80224609375,
+                            "success": true,
+                            "correctChoice": false
+                        },
+                        {
+                            "holdDurationMs": 1997.8328857421875,
+                            "success": true,
+                            "correctChoice": false
+                        },
+                        {
+                            "holdDurationMs": 1997.6021728515625,
+                            "success": true,
+                            "correctChoice": true
+                        },
+                        {
+                            "holdDurationMs": 660.4036865234375,
+                            "success": false,
+                            "correctChoice": false
+                        },
+                        {
+                            "holdDurationMs": 1998.8006591796875,
+                            "success": true,
+                            "correctChoice": true
+                        },
+                        {
+                            "holdDurationMs": 1996.266357421875,
+                            "success": true,
+                            "correctChoice": true
+                        },
+                        {
+                            "holdDurationMs": 1998.8221435546875,
+                            "success": true,
+                            "correctChoice": true
+                        },
+                        {
+                            "holdDurationMs": 696.7932739257813,
+                            "success": false,
+                            "correctChoice": false
+                        },
+                        {
+                            "holdDurationMs": 1999.0059814453125,
+                            "success": true,
+                            "correctChoice": true
+                        },
+                        {
+                            "holdDurationMs": 1998.76025390625,
+                            "success": true,
+                            "correctChoice": true
+                        },
+                        {
+                            "holdDurationMs": 499.3828125,
+                            "success": false,
+                            "correctChoice": false
+                        },
+                        {
+                            "holdDurationMs": 1994.8695068359375,
+                            "success": true,
+                            "correctChoice": true
+                        },
+                        {
+                            "holdDurationMs": 1997.974853515625,
+                            "success": true,
+                            "correctChoice": true
+                        },
+                        {
+                            "holdDurationMs": 326.97650146484377,
+                            "success": false,
+                            "correctChoice": false
+                        },
+                        {
+                            "holdDurationMs": 1995.8944091796875,
+                            "success": true,
+                            "correctChoice": false
+                        }
+                    ],
+                    "timeToFirstSelection": 3.8706791400909426,
+                    "difficulty": "hard",
+                    "timeToFirstCorrectAction": 3.8706791400909426,
+                    "missed": 0,
+                    "caught": 15,
+                    "errors": 5,
+                    "correctPairs": 0,
+                    "score": 0
+                }
+            ]
+        }
+    ]
+}
