@@ -2,56 +2,85 @@
 <html lang="ru">
 <head>
   <meta charset="UTF-8" />
- <base href="./">
+  <base href="./">
   <title>Общая статистика</title>
   <style>
-    body{margin:0;padding:0;font-family:Arial, sans-serif;color:#000;background:#fff}
-    .container{max-width:1400px;margin:0 auto;padding:20px 40px}
-    .top-row{display:flex;flex-wrap:wrap;gap:20px;margin-bottom:24px}
-    .info-block,.total-block,.pie-block{
-      background:#fff;border:1px solid #ddd;box-shadow:0 0 5px rgba(0,0,0,.05);
-      padding:20px;flex:1;min-width:280px
-    }
-    .info-block{flex-basis:40%}.total-block{flex-basis:25%}.pie-block{flex-basis:35%}
-    .info-block h2,.total-block h2,.pie-block h2{margin:0 0 10px 0;font-size:25px}
-    .info-list,.total-list{list-style:none;margin:0;padding:0;font-size:18px}
-    .total-list li{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px}
-    .total-list .marker{width:14px;height:14px;border-radius:50%;display:inline-block;margin-right:10px;flex-shrink:0}
-    .legend{margin-top:10px;font-size:16px}
-    .legend-item{display:flex;align-items:center;margin-bottom:6px}
-    .legend-color{width:12px;height:12px;border-radius:2px;margin-right:8px;flex-shrink:0}
-    .filters{margin:6px 0 16px;display:flex;flex-wrap:wrap;gap:20px;align-items:center}
-    .filter-group{display:flex;flex-direction:column;min-width:220px}
-    .filter-group label{font-size:14px;margin-bottom:4px}
-    #pieContainer{height:280px;border:1px solid #eee;padding:10px}
-    .chart-container{height:500px;margin-bottom:40px;border:1px solid #eee;padding:12px}
-    .chart-container canvas,#pieContainer canvas{width:100% !important;height:auto !important;display:block}
-
-    .chart-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:6px}
-    .chart-header h3{margin:0;font-size:22px}
-    .chart-controls{display:flex;gap:8px}
-    .chart-controls button,.export-buttons button{
-      padding:4px 10px;font-size:14px;border:1px solid #bbb;border-radius:4px;background:#f5f5f5;cursor:pointer
-    }
-    .chart-controls button:hover,.export-buttons button:hover{background:#e0e0e0}
-    .export-buttons{margin:8px 0 16px}
-    .warn{padding:10px;border:1px solid #f0c36d;background:#fff7e6;border-radius:4px;margin-bottom:12px;display:none}
-  </style>
+  :root {
+    --bg-color:#0f172a;
+    --card-bg:#1e293b;
+    --card-hover:#27354d;
+    --text-color:#e2e8f0;
+    --text-muted:#94a3b8;
+    --border-color:#334155;
+    --accent:#6366f1;
+    --font-main:'Inter','Segoe UI',Tahoma,sans-serif;
+  }
+  body{margin:0;padding:0;font-family:var(--font-main);color:var(--text-color);background:var(--bg-color);line-height:1.5}
+  h1,h2,h3{font-weight:600;color:var(--text-color)}
+  .container{max-width:1400px;margin:0 auto;padding:24px}
+  .top-row{display:flex;flex-wrap:wrap;gap:24px;margin-bottom:32px}
+  .info-block,.total-block,.pie-block{
+    background:var(--card-bg);
+    border:1px solid var(--border-color);
+    border-radius:12px;
+    padding:24px;
+    flex:1;
+    min-width:300px;
+    box-shadow:0 4px 12px rgba(0,0,0,0.3);
+  }
+  .info-block{flex-basis:40%}.total-block{flex-basis:25%}.pie-block{flex-basis:35%}
+  .info-block h2,.total-block h2,.pie-block h2{margin:0 0 16px;font-size:24px}
+  .info-list,.total-list{list-style:none;margin:0;padding:0;font-size:16px}
+  .total-list li{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px}
+  .total-list .marker{width:14px;height:14px;border-radius:50%;display:inline-block;margin-right:10px;flex-shrink:0}
+  .legend{margin-top:12px;font-size:14px}
+  .legend-item{display:flex;align-items:center;margin-bottom:8px;color:var(--text-muted)}
+  .legend-color{width:12px;height:12px;border-radius:2px;margin-right:8px;flex-shrink:0}
+  .filters{margin:8px 0 24px;display:flex;flex-wrap:wrap;gap:24px;align-items:flex-end}
+  .filter-group{display:flex;flex-direction:column;min-width:220px}
+  .filter-group label{font-size:14px;margin-bottom:6px;color:var(--text-muted)}
+  .filter-group input[type="number"],
+  .filter-group input[type="datetime-local"]{
+    background:var(--card-bg);border:1px solid var(--border-color);color:var(--text-color);border-radius:8px;padding:6px 8px
+  }
+  .filter-group input[type="checkbox"]{accent-color:var(--accent)}
+  .difficulty-filter{display:flex;gap:12px;margin:10px 0;color:var(--text-muted)}
+  .difficulty-filter label{display:flex;align-items:center;gap:4px;font-size:14px}
+  .difficulty-filter input{accent-color:var(--accent)}
+  #pieContainer{height:280px;border:1px solid var(--border-color);border-radius:12px;padding:16px;background:var(--card-bg)}
+  .chart-container{height:400px;margin-bottom:40px;border:1px solid var(--border-color);border-radius:12px;padding:16px;background:var(--card-bg);box-shadow:0 4px 12px rgba(0,0,0,0.3)}
+  .chart-container canvas,#pieContainer canvas{width:100% !important;height:auto !important;display:block}
+  .chart-container{ padding-bottom: 90px; }
+  .chart-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px}
+  .chart-controls{display:flex;gap:8px}
+  
+  .chart-controls button,
+  .export-buttons button{
+    padding:6px 12px;font-size:14px;border:1px solid var(--border-color);border-radius:6px;background:var(--card-bg);color:var(--text-color);cursor:pointer;transition:background .2s,color .2s
+  }
+  .chart-controls button:hover,
+  .export-buttons button:hover{background:var(--card-hover);color:#fff}
+  .export-buttons{margin:12px 0 20px}
+  .warn{padding:12px;border:1px solid #f0c36d;background:#3f3010;border-radius:8px;margin-bottom:16px;display:none}
+</style>
 </head>
 <body>
   <div class="container">
 
+    <h1 style="margin-bottom:8px">Статистика использования</h1>
+    <p style="margin:0 0 24px;color:var(--text-muted)">Данные агрегируются за сутки по времени UTC.</p>
+
     <div id="warn" class="warn">
       Не найден один из локальных скриптов:
-      <code>lib/chart.umd.min.js</code>,
-      <code>lib/hammer.min.js</code>,
-      <code>lib/chartjs-plugin-zoom.min.js</code>.
-      Положите файлы в <code>Reports/lib/</code> и обновите страницу.
+      <code>chart.umd.min.js</code>,
+      <code>hammer.min.js</code>,
+      <code>chartjs-plugin-zoom.min.js</code>.
+      Положите файлы в ту же папку и обновите страницу.
     </div>
 
-    <div id="file-load-container" style="display:none;margin-bottom:14px;padding:10px;border:1px solid #ddd;border-radius:4px;background:#fafafa">
-      <p style="margin:0 0 8px;font-size:16px">Выберите JSON-файл профиля (UserProfiles/&lt;id&gt;.json)</p>
-      <button id="select-file">Выбрать файл</button>
+    <div id="file-load-container" style="display:none;margin-bottom:14px;padding:10px;border:1px solid var(--border-color);border-radius:8px;background:var(--card-bg)">
+      <p style="margin:0 0 8px;font-size:16px;color:var(--text-color)">Выберите JSON-файл профиля (UserProfiles/&lt;id&gt;.json)</p>
+      <button id="select-file" style="border:1px solid var(--border-color);background:var(--card-bg);color:var(--text-color);border-radius:6px;padding:6px 12px">Выбрать файл</button>
       <input type="file" id="file-input" accept=".json" style="display:none">
     </div>
 
@@ -78,7 +107,7 @@
         <label>Диапазон сессий (по индексам)</label>
         <input id="range-start" type="number" min="1" step="1" value="1" style="width:110px">
         <input id="range-end"   type="number" min="1" step="1" value="1" style="width:110px;margin-top:6px">
-        <div id="range-values" style="font-size:14px;margin-top:6px"></div>
+        <div id="range-values" style="font-size:14px;margin-top:6px;color:var(--text-muted)"></div>
       </div>
       <div class="filter-group" style="flex:1;min-width:280px">
         <label>Диапазон дат</label>
@@ -92,23 +121,30 @@
         <label>Дополнительные опции</label>
         <div style="display:flex;gap:8px;align-items:center;margin-top:6px">
           <input type="checkbox" id="toggle-ttf">
-          <label for="toggle-ttf" style="font-size:14px">Показывать время до первого выбора</label>
+          <label for="toggle-ttf" style="font-size:14px;color:var(--text-muted)">Показывать время до первого выбора</label>
         </div>
       </div>
     </div>
 
-    <div class="export-buttons"><button id="export-csv">Скачать CSV</button></div>
+    <div class="export-buttons"><button id="export-csv">Выгрузить в CSV</button></div>
 
-    <div class="chart-container" id="chart-container-game">
-      <div class="chart-header">
-        <h3>Цветочный сад</h3>
-        <div class="chart-controls">
-          <button data-reset-id="gameChart">Сбросить зум</button>
-          <button data-download-id="gameChart">PNG</button>
-        </div>
-      </div>
-      <canvas id="gameChart"></canvas>
-    </div>
+   <div class="chart-container" id="chart-container-game">
+ <div class="chart-header">
+   <h3>Цветочный сад</h3>
+   <div class="chart-controls">
+     <button data-reset-id="gameChart">Сбросить зум</button>
+     <button data-download-id="gameChart">PNG</button>
+   </div>
+ </div>
+
+ <div class="difficulty-filter" data-chart="game">
+   <label><input type="radio" name="gameDiff" value="all" checked> Все</label>
+   <label><input type="radio" name="gameDiff" value="easy"> Легкий</label>
+   <label><input type="radio" name="gameDiff" value="hard"> Сложный</label>
+ </div>
+
+ <canvas id="gameChart"></canvas>
+</div>
 
     <div class="chart-container" id="chart-container-fish">
       <div class="chart-header">
@@ -142,16 +178,24 @@
       <canvas id="butterflyChart"></canvas>
     </div>
 
-    <div class="chart-container" id="chart-container-snowflakes">
-      <div class="chart-header">
-        <h3>Снежинки</h3>
-        <div class="chart-controls">
-          <button data-reset-id="snowflakesChart">Сбросить зум</button>
-          <button data-download-id="snowflakesChart">PNG</button>
-        </div>
-      </div>
-      <canvas id="snowflakesChart"></canvas>
-    </div>
+       <div class="chart-container" id="chart-container-snowflakes">
+     <div class="chart-header">
+       <h3>Снежинки</h3>
+       <div class="chart-controls">
+         <button data-reset-id="snowflakesChart">Сбросить зум</button>
+         <button data-download-id="snowflakesChart">PNG</button>
+       </div>
+     </div>
+
+     <div class="difficulty-filter" data-chart="snowflakes">
+       <label><input type="radio" name="snowflakesDiff" value="all" checked> Все</label>
+       <label><input type="radio" name="snowflakesDiff" value="easy"> Легкий</label>
+       <label><input type="radio" name="snowflakesDiff" value="hard"> Сложный</label>
+     </div>
+
+     <canvas id="snowflakesChart"></canvas>
+   </div>
+
 
     <div class="chart-container" id="chart-container-memory">
       <div class="chart-header">
@@ -181,12 +225,20 @@
     </div>
   </div>
 
-  <script src="lib/chart.umd.min.js"></script>
-  <script src="lib/hammer.min.js"></script>
-  <script src="lib/chartjs-plugin-zoom.min.js"></script>
-<!-- Удален блок загрузки старых библиотек для UWP, так как WebView2 поддерживает современные версии -->
+  <script src="chart.umd.min.js"></script>
+  <script src="hammer.min.js"></script>
+  <script src="chartjs-plugin-zoom.min.js"></script>
 
   <script>
+    const css=getComputedStyle(document.documentElement);
+    const TEXT_COLOR=css.getPropertyValue('--text-color').trim();
+    const BORDER_COLOR=css.getPropertyValue('--border-color').trim();
+    Chart.defaults.color=TEXT_COLOR;
+    Chart.defaults.borderColor=BORDER_COLOR;
+    Chart.defaults.font.family=css.getPropertyValue('--font-main').trim();
+    Chart.defaults.layout = Chart.defaults.layout || {};
+    Chart.defaults.layout.padding = { bottom: 20 };
+
     const pieLabelPlugin = {
       id: 'pieLabelPlugin',
       afterDatasetsDraw(chart) {
@@ -197,7 +249,7 @@
         if(!total) return;
         ctx.save();
         ctx.font='bold 14px Arial';
-        ctx.fillStyle='#000';
+        ctx.fillStyle=TEXT_COLOR;
         ctx.textAlign='center';
         ctx.textBaseline='middle';
         const meta = chart.getDatasetMeta(0);
@@ -224,33 +276,53 @@
       GameScene: 'Цветочный сад',
       Fish: 'Аквариум',
       ButterflyGameScene: 'Бабочки',
-      //HardButterflyGameScene: 'Бабочки (сложн.)',
       Snowflakes: 'Снежинки',
       MemoryMatchScene: 'Карточки',
       FrutGame: 'Фруктовая битва'
     };
+
+    /* 🎨 ПАЛИТРЫ ИГР */
     const COLOR = {
-      GameScene: '#4CAF50',
-      Fish: '#1E88E5',
-      ButterflyGameScene: '#E91E63',
-      //HardButterflyGameScene: '#9C27B0',
-      Snowflakes: '#00BCD4',
-      MemoryMatchScene: '#FF9800',
-      FrutGame: '#F44336',
+      // Цветочный сад — пастель
+      GameScene: '#85C3CE',        // длительность/правильные
+      GameSceneAlt: '#F78770',     // ошибки (hard)
+
+      // Аквариум — морская палитра
+      Fish: '#0B184B',             // правильные
+      FishAlt: '#0296A7',          // ошибки
+      FishMissed: '#5FCAD8',       // пропущенные
+
+      // Бабочки — зелёно-фиолетовые
+      ButterflyGameScene: '#CCABDB', // правильные (easy)
+      ButterflyCaught: '#089770',    // поймано (hard)
+      ButterflyErr: '#E53935',       // ошибки (hard)
+
+      // Снежинки — холодные
+      Snowflakes: '#54CDCC',         // поймано (easy)
+      SnowflakesAlt: '#215522',      // поймано (hard)
+      SnowflakesMissed: '#DCD964',   // пропущено (hard)
+
+      // Карточки — оранжево-бежевые
+      MemoryMatchScene: '#FFA726',   // пары
+      MemoryErr: '#E53935',          // ошибки
+
+      // Фрукты — тёплые
+      FrutGame: '#E26B65',           // очки (easy)
+      FrutSliced: '#26A69A',         // разрезано (hard)
+      FrutMissed: '#FFA726',         // пропущено (hard)
+      FrutErr: '#E53935',            // ошибки (hard)
+
+      // глобальные
       ERR: '#E53935',
-      TTF: '#FFD700'
+      TTF: '#FFD700'                 // всегда жёлтый
     };
+
     const CANON = ['GameScene','Fish','ButterflyGameScene','Snowflakes','MemoryMatchScene','FrutGame'];
     const ALIAS = {
-      // рыбы
       'FishGameScene':'Fish','Aquarium':'Fish',
-      // бабочки
       'HardButterflyGameScene':'ButterflyGameScene',
-      // снежинки
       'SnowflakesScene':'Snowflakes',
-      // карточки
       'Memory':'MemoryMatchScene','MemoryGame':'MemoryMatchScene',
-      // фрукты
       'FruitGame':'FrutGame','FruitGameScene':'FrutGame'
     };
     const canonId = id => ALIAS[id] || id;
@@ -260,7 +332,6 @@
       GameScene: [],
       Fish: [],
       ButterflyGameScene: [],
-      //HardButterflyGameScene: [],
       Snowflakes: [],
       MemoryMatchScene: [],
       FrutGame: []
@@ -315,18 +386,14 @@
     }
 
     async function start(){
-  if (!okLibs()) {
-    // Удалено ожидание загрузки старых библиотек для UWP
-    showWarn(true);
-    showFileLoader();
-    return;
-  }
-  showWarn(false);
-  // далее — как у тебя (PROFILE_DATA / fetch / file picker)
+      if (!okLibs()) {
+        showWarn(true);
+        showFileLoader();
+        return;
+      }
+      showWarn(false);
 
-      
       if (window.PROFILE_DATA) {
-        console.log('Используем встроенные данные профиля');
         profileData = window.PROFILE_DATA;
         initUI();
         return;
@@ -335,11 +402,9 @@
       const {profilePath}=getQueryParams();
       if(profilePath){
         try{
-          console.log('Попытка загрузить профиль через fetch:', profilePath);
           const r=await fetch(profilePath);
           if(!r.ok) throw new Error('HTTP '+r.status);
           profileData=await r.json();
-          console.log('Профиль загружен через fetch');
           initUI();
           return;
         }catch(err){
@@ -347,7 +412,6 @@
         }
       }
       
-      console.log('Показываем загрузчик файлов');
       showFileLoader();
     }
 
@@ -368,42 +432,34 @@
 
       Object.keys(allSessions).forEach(g => allSessions[g] = []);
       (profileData.statsByGame || []).forEach(g => {
-      const gidCanon = canonId(g.gameId);
-      if (!allSessions[gidCanon]) return;
-      const arr = (g.sessionHistory || []).slice().sort((a, b) => new Date(a.startTime) - new Date(b.startTime));
-      arr.forEach(s => {
-        const dt = new Date(s.startTime);
-        // если пришло из "HardButterflyGameScene", проставим difficulty='hard'
-        const difficultyRaw = (g.gameId === 'HardButterflyGameScene') ? 'hard' : (s.difficulty ?? '');
-      const difficulty = String(difficultyRaw).toLowerCase();
+        const gidCanon = canonId(g.gameId);
+        if (!allSessions[gidCanon]) return;
+        const arr = (g.sessionHistory || []).slice().sort((a, b) => new Date(a.startTime) - new Date(b.startTime));
+        arr.forEach(s => {
+          const difficultyRaw = (g.gameId === 'HardButterflyGameScene') ? 'hard' : (s.difficulty ?? '');
+          const difficulty = String(difficultyRaw).toLowerCase();
+          const ttf = Number(s.timeToFirstCorrectAction ?? 0);
 
-      // --- TTF: берём корректное действие, иначе первый выбор ---
-      const ttfSel  = Number(s.timeToFirstSelection ?? 0);
-      const ttfCorr = Number(s.timeToFirstCorrectAction ?? 0);
-      const ttf     = ttfCorr > 0 ? ttfCorr : (ttfSel > 0 ? ttfSel : 0);
+          let caught = Number(s.caught ?? 0);
+          let errors = Number(s.errors ?? 0);
+          if (difficulty === 'hard') {
+            if (caught === 0 && (s.correctActions ?? 0) > 0)   caught = Number(s.correctActions);
+            if (errors === 0 && (s.incorrectActions ?? 0) > 0) errors = Number(s.incorrectActions);
+          }
 
-      // --- Нормализация метрик для Бабочек (сложный): 
-      // если caught/errors не заполнены, подставляем correctActions/incorrectActions ---
-      let caught = Number(s.caught ?? 0);
-      let errors = Number(s.errors ?? 0);
-      if (difficulty === 'hard') {
-        if (caught === 0 && (s.correctActions ?? 0) > 0)   caught = Number(s.correctActions);
-        if (errors === 0 && (s.incorrectActions ?? 0) > 0) errors = Number(s.incorrectActions);
-      }
-
-      allSessions[gidCanon].push({
-        dt: new Date(s.startTime),
-        duration: Number(s.durationInSeconds || 0),
-        correct: Number(s.correctActions || 0),
-        incorrect: Number(s.incorrectActions || 0),
-        ttf,
-        difficulty,
-        missed: Number(s.missed || 0),
-        caught,
-        errors,
-        correctPairs: Number(s.correctPairs || 0),
-        score: Number(s.score || 0)
-      });
+          allSessions[gidCanon].push({
+            dt: new Date(s.startTime),
+            duration: Number(s.durationInSeconds || 0),
+            correct: Number(s.correctActions || 0),
+            incorrect: Number(s.incorrectActions || 0),
+            ttf,
+            difficulty,
+            missed: Number(s.missed || 0),
+            caught,
+            errors,
+            correctPairs: Number(s.correctPairs || 0),
+            score: Number(s.score || 0)
+          });
 
         });
       });
@@ -479,8 +535,11 @@
       const res = {};
       const [iS, iE] = filter.indexRange.map(v => Math.round(v));
       const [dS, dE] = filter.dateRange;
+
       Object.keys(allSessions).forEach(g => {
-        res[g] = allSessions[g].filter((s, idx) => {
+        if (g === 'ButterflyGameScene' || g === 'HardButterflyGameScene') return;
+        const arr = allSessions[g] || [];
+        res[g] = arr.filter((s, idx) => {
           const i = idx + 1;
           const okI = i >= iS && i <= iE;
           const okD = (!dS || s.dt >= dS) && (!dE || s.dt <= dE);
@@ -488,20 +547,32 @@
         });
       });
 
-      // Объединяем сессии бабочек
-      if (res.ButterflyGameScene && res.HardButterflyGameScene) {
-        res.ButterflyGameScene = res.ButterflyGameScene.concat(res.HardButterflyGameScene);
-        res.ButterflyGameScene.sort((a, b) => a.dt - b.dt);
-        delete res.HardButterflyGameScene;
+      const easy = allSessions.ButterflyGameScene || [];
+      const hard = allSessions.HardButterflyGameScene || [];
+      if (easy.length || hard.length) {
+        const ts = s => (s.dt instanceof Date && !isNaN(s.dt))
+          ? s.dt.getTime()
+          : Date.parse(s.startTime || s.dt || 0) || 0;
+
+        let merged = [...easy, ...hard];
+        merged = merged.filter(s => (!dS || s.dt >= dS) && (!dE || s.dt <= dE));
+        merged.sort((a, b) => ts(a) - ts(b));
+        merged = merged.filter((_, idx) => {
+          const i = idx + 1;
+          return i >= iS && i <= iE;
+        });
+
+        res.ButterflyGameScene = merged;
       }
+
       return res;
     }
 
     function computeTotals(f) {
-    const t = { GameScene:0, Fish:0, ButterflyGameScene:0, Snowflakes:0, MemoryMatchScene:0, FrutGame:0 };
-    CANON.forEach(g => (f[g]||[]).forEach(s => t[g] += s.duration));
-    return t;
- }
+      const t = { GameScene:0, Fish:0, ButterflyGameScene:0, Snowflakes:0, MemoryMatchScene:0, FrutGame:0 };
+      CANON.forEach(g => (f[g]||[]).forEach(s => t[g] += s.duration));
+      return t;
+    }
 
     function renderSummary(totals){
       const list=document.getElementById('total-list');
@@ -568,6 +639,7 @@
       return {
         labels: {
           usePointStyle: false,
+          color: TEXT_COLOR,
           generateLabels(chart) {
             const ds = chart.data.datasets || [];
             return ds.map((d,i)=>({
@@ -603,690 +675,776 @@
       const s=String(dt.getSeconds()).padStart(2,'0');
       return `${Y}-${M}-${D} ${h}:${m}:${s}`;
     }
-    const showTTF = document.getElementById('chkTTF')?.checked === true;
 
     function renderCharts(f){
-      // читаем оба возможных id чекбокса
-const ttfChecked =
-  (document.getElementById('toggle-ttf')?.checked ?? false) ||
-  (document.getElementById('chkTTF')?.checked ?? false);
+      const ttfChecked =
+        (document.getElementById('toggle-ttf')?.checked ?? false) ||
+        (document.getElementById('chkTTF')?.checked ?? false);
 
-      // Цветочный сад
-      (()=>{
-        const gid='GameScene';
-        const d=f[gid];
-        const c=document.getElementById('gameChart');
-        if(charts.gameChart) charts.gameChart.destroy();
-        if(!d||!d.length){
-          c.getContext('2d').clearRect(0,0,c.width,c.height);
-          return;
-        }
-        // Чекбокс TTF: поддерживаем оба id (toggle-ttf и chkTTF)
-       const ttfChecked =
-          (document.getElementById('toggle-ttf')?.checked ?? document.getElementById('chkTTF')?.checked) === true;
-        const showTTF = ttfChecked && d.some(s => (s.ttf ?? 0) > 0);
-        let yMax = Math.max(...d.map(s => s.duration || 0));
-        if (showTTF) yMax = Math.max(yMax, ...d.map(s => s.ttf || 0));
-        const {step,max}=axis(yMax);
-        const labels=d.map(s=>oneLineLabel(s.dt));
+  /* ---------- Цветочный сад ---------- */
+  (()=>{
+    const gid='GameScene';
+    let d=f[gid];
+    const c=document.getElementById('gameChart');
+    if(charts.gameChart) charts.gameChart.destroy();
 
-        const ds=[{
-          label:'Длительность, с',
-          data:d.map(s=>s.duration),
-          borderColor:COLOR[gid],
-          backgroundColor:COLOR[gid],
-          tension:.2,
-          fill:false,
-          pointRadius:4,
-          pointHoverRadius:5,
-          yAxisID:'y'  
-        }];
-        if(showTTF){
-          ds.push({
-            label:'Время до первого выбора, с',
-            data:d.map(s=>s.ttf ?? null),
-            borderColor:COLOR.TTF,
-            backgroundColor:COLOR.TTF,
-            borderDash:[6,4],
-            tension:.2,
-            fill:false,
-            pointRadius:4,
-            pointStyle:'rectRot',
-            pointHoverRadius:5,
-            yAxisID:'yTime'        // правая ось для TTF
-          });
-        }
+    const diffEl = document.querySelector('input[name="gameDiff"]:checked');
+    const diff = diffEl ? diffEl.value : 'all';
+    if (d) { if (diff !== 'all') d = d.filter(s => s.difficulty === diff); }
 
-        charts.gameChart=new Chart(c.getContext('2d'),{
-          type:'line',
-          data:{labels,datasets:ds},
-          options:{
-            responsive:true,
-            maintainAspectRatio:false,
-            scales:{
-              x:{
-                type:'category',
-                ticks:{
-                  autoSkip:false,
-                  maxRotation:45,
-                  minRotation:45,
-                  color:'#000',
-                  callback:function(v){ return this.getLabelForValue(v); }
-                },
-                grid:{color:'#E0E0E0'},
-                border:{color:'#AAA'}
-              },
-              y:{
-                position:'left',
-                suggestedMin:0,
-                suggestedMax:max,
-                ticks:{stepSize:step,color:'#000'},
-                grid:{color:'#E0E0E0'},
-                border:{color:'#AAA'}
-              },
-              yTime:{
-                position:'right',
-                suggestedMin:0,
-                suggestedMax:max,
-                ticks:{stepSize:step,color:'#000'},
-                grid:{drawOnChartArea:false},
-                border:{color:'#AAA'}
-              }
-            },
-            plugins:{legend:{position:'top',...legendRect()},
-              tooltip:{callbacks:{title:c=>{const i=c[0].dataIndex; const dt=d[i].dt; return `#${i+1} — ${dt.toISOString().replace('T',' ').slice(0,19)}`},
-                                   label:c=>`${c.dataset.label}: ${c.parsed.y.toFixed(2)}`}},
-              zoom: zoomOpts
-            }}
-        });
-      })();
+    if(!d || !d.length){
+      c.getContext('2d').clearRect(0,0,c.width,c.height);
+      document.getElementById('chart-container-game').style.display='none';
+      return;
+    }
+    document.getElementById('chart-container-game').style.display='block';
 
-      // Аквариум
-      (()=>{
-        const gid='Fish';
-        let d=f[gid];
-        const c=document.getElementById('fishChart');
-        if(charts.fishChart) charts.fishChart.destroy();
-        
-        const diff = document.querySelector('input[name="fishDiff"]:checked').value;
-        if (d) {
-          if (diff !== 'all') {
-            d = d.filter(s => s.difficulty === diff);
-          }
-        }
+    const labels = d.map(s=>oneLineLabel(s.dt));
+    const showTTF = ttfChecked && d.some(s => (s.ttf ?? 0) > 0);
 
-        if(!d||!d.length){
-          c.getContext('2d').clearRect(0,0,c.width,c.height);
-          document.getElementById('chart-container-fish').style.display = 'none';
-          return;
-        }
-        document.getElementById('chart-container-fish').style.display = 'block';
+    const datasets = [];
+    const yAxes = {};
+    const cat = 0.80;
+    const bar = 1.00;
 
-        const labels=d.map(s=>oneLineLabel(s.dt));
-        const showTTF = ttfChecked && d.some(s => (s.ttf ?? 0) > 0);
+    const yMaxTime = Math.max(1, ...d.map(s => s.duration || 0), ...(showTTF ? d.map(s => s.ttf || 0) : [1]));
+    const timeAxis = axis(yMaxTime);
+    yAxes.yTime = {
+      type:'linear', position:'right', beginAtZero:true,
+      suggestedMax: timeAxis.max,
+      ticks:{ stepSize: timeAxis.step, color: TEXT_COLOR },
+      grid:{ drawOnChartArea:false }, border:{ color: BORDER_COLOR }
+    };
 
+    datasets.push({
+      type:'line',
+      label:'Длительность, с',
+      data:d.map(s=>s.duration),
+      borderColor:COLOR.GameScene,
+      backgroundColor:COLOR.GameScene,
+      pointRadius:3, tension:0.2,
+      yAxisID:'yTime', order:1
+    });
 
-        const yMaxCounts=Math.max(1,...d.map(s=>Math.max(s.correct,s.incorrect, s.missed || 0)));
-        const stepCounts=Math.max(1,Math.ceil(yMaxCounts/4));
-        const suggestedMaxCounts=Math.max(yMaxCounts,stepCounts*4);
+    if (showTTF) {
+      datasets.push({
+        type:'line',
+        label:'Время до первого выбора, с',
+        data:d.map(s=>s.ttf||null),
+        borderColor:COLOR.TTF, backgroundColor:COLOR.TTF,
+        borderDash:[6,4], pointRadius:3, tension:0.2,
+        yAxisID:'yTime', order:0
+      });
+    }
 
-        const yMaxTime=showTTF?Math.max(...d.map(s=>s.ttf||0),1):1;
-        const stepTime=Math.max(1,Math.ceil(yMaxTime/4));
-        const suggestedMaxTime=Math.max(yMaxTime,stepTime*4);
+    const dataCorrect = d.map(s => Number(s.correct || s.correctActions || 0));
+    const dataErrorsHard = d.map(s => s.difficulty === 'hard' ? (s.incorrect || s.incorrectActions || s.errors || 0) : null);
 
-        const cat=0.80;
-        const bar=1.00;
+    if (dataCorrect.some(v => v>0) || dataErrorsHard.some(v => v!=null && v>0)) {
+      const yMaxCounts = Math.max(
+        1,
+        ...dataCorrect,
+        ...dataErrorsHard.filter(v=>v!=null).map(v=>Number(v)||0)
+      );
+      const countAxis = axis(yMaxCounts);
+      yAxes.yCounts = {
+        type:'linear', position:'left', beginAtZero:true,
+        suggestedMax: countAxis.max,
+        ticks:{ stepSize: countAxis.step, color: TEXT_COLOR },
+        grid:{ color: BORDER_COLOR }, border:{ color: BORDER_COLOR }
+      };
 
-        const datasets=[
-          {
-            label:'Правильные',
-            data:d.map(s=>s.correct),
-            backgroundColor:COLOR[gid],
-            borderColor:COLOR[gid],
-            borderWidth:0,
-            yAxisID:'yCounts',
-            order:2,
-            barPercentage:bar,
-            categoryPercentage:cat
-          },
-          {
-            label:'Ошибки',
-            data:d.map(s=>s.incorrect),
-            backgroundColor:COLOR.ERR,
-            borderColor:COLOR.ERR,
-            borderWidth:0,
-            yAxisID:'yCounts',
-            order:2,
-            barPercentage:bar,
-            categoryPercentage:cat
-          }
-        ];
+      datasets.push({
+        label:'Правильные',
+        data:dataCorrect,
+        backgroundColor:COLOR.GameScene,
+        yAxisID:'yCounts', order:2,
+        barPercentage:bar, categoryPercentage:cat
+      });
 
-        if (d.some(s => s.missed > 0)) {
-          datasets.push({
-            label: 'Пропущенные',
-            data: d.map(s => s.missed),
-            backgroundColor: '#FFA726',
-            yAxisID: 'yCounts',
-            order: 2,
-            barPercentage: bar,
-            categoryPercentage: cat
-          });
-        }
-
-        if(showTTF){
-          datasets.push({
-            type:'line',
-            label:'Время до первого выбора, с',
-            data:d.map(s=>s.ttf||null),
-            borderColor:COLOR.TTF,
-            backgroundColor:COLOR.TTF,
-            pointRadius:3,
-            tension:0.2,
-            yAxisID:'yTime',
-            order:1
-          });
-        }
-
-        charts.fishChart=new Chart(c.getContext('2d'),{
-          type:'bar',
-          data:{labels,datasets},
-          options:{
-            responsive:true,
-            maintainAspectRatio:false,
-            scales:{
-              x:{
-                type:'category',
-                ticks:{
-                  autoSkip:false,
-                  maxRotation:45,
-                  minRotation:45,
-                  color:'#000',
-                  callback:function(v){ return this.getLabelForValue(v); }
-                },
-                grid:{color:'#E0E0E0'},
-                border:{color:'#AAA'}
-              },
-              yCounts:{
-                type:'linear',
-                position:'left',
-                beginAtZero:true,
-                suggestedMax:suggestedMaxCounts,
-                ticks:{stepSize:stepCounts,color:'#000'},
-                grid:{color:'#E0E0E0'},
-                border:{color:'#AAA'}
-              },
-              yTime:{
-                type:'linear',
-                position:'right',
-                display:showTTF,
-                beginAtZero:true,
-                suggestedMax:suggestedMaxTime,
-                ticks:{stepSize:stepTime,color:'#000'},
-                grid:{drawOnChartArea:false},
-                border:{color:'#AAA'}
-              }
-            },
-            plugins:{legend:{position:'top',...legendRect()},
-              tooltip:{callbacks:{title:c=>{const i=c[0].dataIndex; const dt=d[i].dt; return `#${i+1} — ${dt.toISOString().replace('T',' ').slice(0,19)}`},
-                                   label:c=> c.dataset.yAxisID==='yTime'
-                                     ? `${c.dataset.label}: ${c.parsed.y.toFixed(2)}`
-                                     : `${c.dataset.label}: ${c.parsed.y}`}},
-              zoom: zoomOpts
-            }
-          }
-        });
-      })();
-
-      // Бабочки
-      (()=>{
-        const gid='ButterflyGameScene';
-        let d=f[gid];
-        const c=document.getElementById('butterflyChart');
-        if(charts.butterflyChart) charts.butterflyChart.destroy();
-
-        const diff = document.querySelector('input[name="butterflyDiff"]:checked').value;
-        if (d) {
-          if (diff !== 'all') d = d.filter(s => s.difficulty === diff);
-        }
-
-        if(!d||!d.length){
-          c.getContext('2d').clearRect(0,0,c.width,c.height);
-          document.getElementById('chart-container-butterfly').style.display = 'none';
-          return;
-        }
-        document.getElementById('chart-container-butterfly').style.display = 'block';
-
-        const labels=d.map(s=>oneLineLabel(s.dt));
-
-        // ✅ TTF чекбокс: пробуем оба id, чтобы везде сработало
-        const ttfChk =
-          (document.getElementById('toggle-ttf') && document.getElementById('toggle-ttf').checked) ||
-          (document.getElementById('chkTTF') && document.getElementById('chkTTF').checked);
-        const showTTF = ttfChecked && d.some(s => (s.ttf ?? 0) > 0);
-
-
-        const datasets = [];
-        const yAxes = {};
-        const bar = 1.0, cat = 0.8; // как в Аквариуме
-
-        // --- Ось времени (правая) ---
-        const yMaxTime = Math.max(1, ...d.map(s => s.duration), ...(showTTF ? d.map(s => s.ttf || 0) : []));
-        const timeAxis = axis(yMaxTime);
-        yAxes.yTime = {
-          type: 'linear',
-          position: 'right',
-          beginAtZero: true,
-          suggestedMax: timeAxis.max,
-          ticks: { stepSize: timeAxis.step, color: '#000' },
-          grid: { drawOnChartArea: false },
-          border: { color: '#AAA' }
-        };
-
-        // Длительность
+      if (dataErrorsHard.some(v => v != null && Number(v) > 0)) {
         datasets.push({
-          type: 'line',
-          label: 'Длительность, с',
-          data: d.map(s => s.duration),
-          borderColor: COLOR.ButterflyGameScene,
-          backgroundColor: COLOR.ButterflyGameScene,
-          pointRadius: 3,
-          tension: 0.2,
-          yAxisID: 'yTime',
-          order: 1
+          label:'Ошибки (сложный)',
+          data: dataErrorsHard,
+          backgroundColor: COLOR.GameSceneAlt,
+          yAxisID:'yCounts', order:2,
+          barPercentage: bar, categoryPercentage: cat
         });
+      }
+    }
 
-        // Время до первого выбора (TTF) — пунктир
-        if (showTTF) {
-          datasets.push({
+    charts.gameChart=new Chart(c.getContext('2d'),{
+      type:'bar',
+      data:{labels,datasets},
+      options:{
+        responsive:true, maintainAspectRatio:false,
+        scales:{
+          x:{ type:'category', ticks:{ autoSkip:false, maxRotation:45, minRotation:45, color:TEXT_COLOR,
+                callback:function(v){ return this.getLabelForValue(v); } },
+              grid:{ color:BORDER_COLOR }, border:{ color:BORDER_COLOR }},
+          ...yAxes
+        },
+        plugins:{
+          legend:{ position:'top', ...legendRect() },
+          tooltip:{ callbacks:{
+            title:c=>{ const i=c[0].dataIndex; const dt=d[i].dt;
+                       return `#${i+1} — ${dt.toISOString().replace('T',' ').slice(0,19)}`; },
+            label:c=> c.dataset.yAxisID==='yTime'
+              ? `${c.dataset.label}: ${Number(c.parsed.y).toFixed(2)}`
+              : `${c.dataset.label}: ${c.parsed.y}`
+          }},
+          zoom: zoomOpts
+        }
+      }
+    });
+  })();
+
+
+  /* ---------- Аквариум ---------- */
+  (()=>{
+    const gid='Fish';
+    let d=f[gid];
+    const c=document.getElementById('fishChart');
+    if(charts.fishChart) charts.fishChart.destroy();
+    
+    const diff = document.querySelector('input[name="fishDiff"]:checked').value;
+    if (d && diff !== 'all') d = d.filter(s => s.difficulty === diff);
+
+    if(!d||!d.length){
+      c.getContext('2d').clearRect(0,0,c.width,c.height);
+      document.getElementById('chart-container-fish').style.display = 'none';
+      return;
+    }
+    document.getElementById('chart-container-fish').style.display = 'block';
+
+    const labels=d.map(s=>oneLineLabel(s.dt));
+    const showTTF = ttfChecked && d.some(s => (s.ttf ?? 0) > 0);
+
+    const yMaxCounts=Math.max(1,...d.map(s=>Math.max(s.correct,s.incorrect, s.missed || 0)));
+    const stepCounts=Math.max(1,Math.ceil(yMaxCounts/4));
+    const suggestedMaxCounts=Math.max(yMaxCounts,stepCounts*4);
+
+    const yMaxTime=showTTF?Math.max(...d.map(s=>s.ttf||0),1):1;
+    const stepTime=Math.max(1,Math.ceil(yMaxTime/4));
+    const suggestedMaxTime=Math.max(yMaxTime,stepTime*4);
+
+    const cat=0.80;
+    const bar=1.00;
+
+    const datasets=[
+      {
+        label:'Правильные',
+        data:d.map(s=>s.correct),
+        backgroundColor:COLOR.Fish,
+        borderColor:COLOR.Fish,
+        borderWidth:0,
+        yAxisID:'yCounts',
+        order:2,
+        barPercentage:bar,
+        categoryPercentage:cat
+      },
+      {
+        label:'Ошибки',
+        data:d.map(s=>s.incorrect),
+        backgroundColor:COLOR.FishAlt,
+        borderColor:COLOR.FishAlt,
+        borderWidth:0,
+        yAxisID:'yCounts',
+        order:2,
+        barPercentage:bar,
+        categoryPercentage:cat
+      }
+    ];
+
+    if (d.some(s => s.missed > 0)) {
+      datasets.push({
+        label: 'Пропущенные',
+        data: d.map(s => s.missed),
+        backgroundColor: COLOR.FishMissed,
+        yAxisID: 'yCounts',
+        order: 2,
+        barPercentage: bar,
+        categoryPercentage: cat
+      });
+    }
+
+    if(showTTF){
+      datasets.push({
+        type:'line',
+        label:'Время до первого выбора, с',
+        data:d.map(s=>s.ttf||null),
+        borderColor:COLOR.TTF,
+        backgroundColor:COLOR.TTF,
+        pointRadius:3,
+        tension:0.2,
+        yAxisID:'yTime',
+        order:1
+      });
+    }
+
+    charts.fishChart=new Chart(c.getContext('2d'),{
+      type:'bar',
+      data:{labels,datasets},
+      options:{
+        responsive:true,
+        maintainAspectRatio:false,
+        scales:{
+          x:{ type:'category', ticks:{ autoSkip:false, maxRotation:45, minRotation:45, color:TEXT_COLOR,
+                callback:function(v){ return this.getLabelForValue(v); } },
+              grid:{color:BORDER_COLOR}, border:{color:BORDER_COLOR}},
+          yCounts:{ type:'linear', position:'left', beginAtZero:true,
+            suggestedMax:suggestedMaxCounts, ticks:{stepSize:stepCounts,color:TEXT_COLOR},
+            grid:{color:BORDER_COLOR}, border:{color:BORDER_COLOR}},
+          yTime:{ type:'linear', position:'right', display:showTTF, beginAtZero:true,
+            suggestedMax:suggestedMaxTime, ticks:{stepSize:stepTime,color:TEXT_COLOR},
+            grid:{drawOnChartArea:false}, border:{color:BORDER_COLOR}}
+        },
+        plugins:{legend:{position:'top',...legendRect()},
+          tooltip:{callbacks:{title:c=>{const i=c[0].dataIndex; const dt=d[i].dt; return `#${i+1} — ${dt.toISOString().replace('T',' ').slice(0,19)}`},
+                               label:c=> c.dataset.yAxisID==='yTime'
+                                 ? `${c.dataset.label}: ${c.parsed.y.toFixed(2)}`
+                                 : `${c.dataset.label}: ${c.parsed.y}`}},
+          zoom: zoomOpts
+        }
+      }
+    });
+  })();
+
+  /* ---------- Бабочки ---------- */
+  (()=>{
+    const gid='ButterflyGameScene';
+    let d=f[gid];
+    const c=document.getElementById('butterflyChart');
+    if(charts.butterflyChart) charts.butterflyChart.destroy();
+
+    const diff = document.querySelector('input[name="butterflyDiff"]:checked').value;
+    if (d && diff !== 'all') d = d.filter(s => s.difficulty === diff);
+
+    if(!d||!d.length){
+      c.getContext('2d').clearRect(0,0,c.width,c.height);
+      document.getElementById('chart-container-butterfly').style.display = 'none';
+      return;
+    }
+    document.getElementById('chart-container-butterfly').style.display = 'block';
+
+    const ts = s => (s.dt instanceof Date && !isNaN(s.dt)) ? s.dt.getTime()
+             : Date.parse(s.startTime || s.dt || 0) || 0;
+    d = d.slice().sort((a,b)=> ts(a) - ts(b));
+    const labels = d.map(s => oneLineLabel(s.dt instanceof Date ? s.dt : new Date(s.startTime)));
+
+    const ttfChk =
+      (document.getElementById('toggle-ttf') && document.getElementById('toggle-ttf').checked) ||
+      (document.getElementById('chkTTF') && document.getElementById('chkTTF').checked);
+    const showTTF = ttfChk && d.some(s => (s.ttf ?? 0) > 0);
+
+    const datasets = [];
+    const yAxes = {};
+    const bar = 1.0, cat = 0.8;
+
+    const yMaxTime = Math.max(1, ...d.map(s => s.duration), ...(showTTF ? d.map(s => s.ttf || 0) : []));
+    const timeAxis = axis(yMaxTime);
+    yAxes.yTime = {
+      type: 'linear', position: 'right', beginAtZero: true,
+      suggestedMax: timeAxis.max, ticks: { stepSize: timeAxis.step, color: TEXT_COLOR },
+      grid: { drawOnChartArea: false }, border: { color: BORDER_COLOR }
+    };
+
+    datasets.push({
+      type: 'line',
+      label: 'Длительность, с',
+      data: d.map(s => s.duration),
+      borderColor: COLOR.ButterflyGameScene,
+      backgroundColor: COLOR.ButterflyGameScene,
+      pointRadius: 3, tension: 0.2,
+      yAxisID: 'yTime', order: 1
+    });
+
+    if (showTTF) {
+      datasets.push({
+        type: 'line',
+        label: 'Время до первого выбора, с',
+        data: d.map(s => s.ttf || null),
+        borderColor: COLOR.TTF, backgroundColor: COLOR.TTF,
+        borderDash: [6,4], pointRadius: 3, tension: 0.2,
+        yAxisID: 'yTime', order: 0
+      });
+    }
+
+    const easyData = d.filter(s => s.difficulty === 'easy');
+    const hardData = d.filter(s => s.difficulty === 'hard');
+
+    let yMaxCounts = 1;
+    if (easyData.length) yMaxCounts = Math.max(yMaxCounts, ...easyData.map(s => s.correct||0));
+    if (hardData.length) yMaxCounts = Math.max(
+      yMaxCounts,
+      ...hardData.map(s => s.caught||0),
+      ...hardData.map(s => s.errors||0)
+    );
+
+    const countAxis = axis(yMaxCounts);
+    yAxes.yCounts = {
+      type: 'linear', position: 'left', beginAtZero: true,
+      suggestedMax: countAxis.max,
+      ticks: { stepSize: countAxis.step, color: TEXT_COLOR },
+      grid: { color: BORDER_COLOR }, border: { color: BORDER_COLOR }
+    };
+
+    if (diff === 'easy' || diff === 'all') {
+      const arr = d.map(s => s.difficulty === 'easy' ? (s.correct||0) : null);
+      if (arr.some(v=>v)) {
+        datasets.push({
+          label: 'Правильные (лёгкий)',
+          data: arr,
+          backgroundColor: COLOR.ButterflyGameScene,
+          yAxisID: 'yCounts', order: 2,
+          barPercentage: bar, categoryPercentage: cat
+        });
+      }
+    }
+
+    if (diff === 'hard' || diff === 'all') {
+      const arrCaught = d.map(s => s.difficulty === 'hard' ? (s.caught||0) : null);
+      if (arrCaught.some(v=>v)) {
+        datasets.push({
+          label: 'Поймано (сложный)',
+          data: arrCaught,
+          backgroundColor: COLOR.ButterflyCaught,
+          yAxisID: 'yCounts', order: 2,
+          barPercentage: bar, categoryPercentage: cat
+        });
+      }
+      const arrErr = d.map(s => s.difficulty === 'hard' ? (s.errors||0) : null);
+      if (arrErr.some(v=>v)) {
+        datasets.push({
+          label: 'Ошибки (сложный)',
+          data: arrErr,
+          backgroundColor: COLOR.ButterflyErr,
+          yAxisID: 'yCounts', order: 2,
+          barPercentage: bar, categoryPercentage: cat
+        });
+      }
+    }
+
+    charts.butterflyChart=new Chart(c.getContext('2d'), {
+      type: 'bar',
+      data: { labels, datasets },
+      options: {
+        responsive: true, maintainAspectRatio: false,
+        scales: {
+          x: { type: 'category',
+               ticks: { autoSkip: false, maxRotation: 45, minRotation: 45, color: TEXT_COLOR },
+               grid: { color: BORDER_COLOR }, border: { color: BORDER_COLOR } },
+          ...yAxes
+        },
+        plugins: {
+          legend: { position: 'top', ...legendRect() },
+          tooltip: { callbacks: { title: c => { const i = c[0].dataIndex; const dt = d[i].dt; return `#${i + 1} — ${dt.toISOString().replace('T', ' ').slice(0, 19)}` } } },
+          zoom: zoomOpts
+        }
+      }
+    });
+  })();
+
+  /* ---------- Снежинки ---------- */
+  (() => {
+    const gid='Snowflakes';
+    let d=f[gid];
+    const c=document.getElementById('snowflakesChart');
+    if(charts.snowflakesChart) charts.snowflakesChart.destroy();
+
+    const diffEl = document.querySelector('input[name="snowflakesDiff"]:checked');
+    const diff = diffEl ? diffEl.value : 'all';
+    if (d && diff !== 'all') d = d.filter(s => s.difficulty === diff);
+
+    if (!d || !d.length) {
+      c.getContext('2d').clearRect(0,0,c.width,c.height);
+      document.getElementById('chart-container-snowflakes').style.display = 'none';
+      return;
+    }
+    document.getElementById('chart-container-snowflakes').style.display = 'block';
+
+    const toNum = v => (v==null ? 0 : (typeof v === 'number' ? v : Number(v)||0));
+
+    const getCaught = s => {
+      const c  = toNum(s.caught);
+      const ok = toNum(s.correct);
+      return c > 0 ? c : ok;
+    };
+    const getMissed = s => {
+      const m   = toNum(s.missed);
+      const inc = toNum(s.incorrect);
+      const er  = toNum(s.errors);
+      return m > 0 ? m : (inc > 0 ? inc : er);
+    };
+
+    const labels = d.map(s => oneLineLabel(s.dt));
+
+    const ttfChk =
+      (document.getElementById('toggle-ttf')?.checked ?? false) ||
+      (document.getElementById('chkTTF')?.checked ?? false);
+    const showTTF = ttfChk && d.some(s => toNum(s.ttf) > 0);
+
+    const datasets = [];
+    const yAxes = {};
+    const bar = 1.0, cat = 0.8;
+
+    const yMaxTime = Math.max(1, ...d.map(s => toNum(s.duration)), ...(showTTF ? d.map(s => toNum(s.ttf)) : []));
+    const timeAxis = axis(yMaxTime);
+    yAxes.yTime = {
+      type:'linear', position:'right', beginAtZero:true,
+      suggestedMax: timeAxis.max,
+      ticks:{ stepSize: timeAxis.step, color: TEXT_COLOR },
+      grid:{ drawOnChartArea:false }, border:{ color: BORDER_COLOR }
+    };
+
+    datasets.push({
+      type:'line',
+      label:'Длительность, с',
+      data:d.map(s=>toNum(s.duration)),
+      borderColor:COLOR.Snowflakes,
+      backgroundColor:COLOR.Snowflakes,
+      pointRadius:3, tension:0.2,
+      yAxisID:'yTime', order:1
+    });
+
+    if (showTTF) {
+      datasets.push({
+        type:'line',
+        label:'Время до первого выбора, с',
+        data:d.map(s => s.ttf==null ? null : toNum(s.ttf)),
+        borderColor:COLOR.TTF, backgroundColor:COLOR.TTF,
+        borderDash:[6,4], pointRadius:3, tension:0.2,
+        yAxisID:'yTime', order:0
+      });
+    }
+
+    if (diff === 'easy' || diff === 'all') {
+      const dataCaughtEasy = d.map(s => s.difficulty === 'easy' ? getCaught(s) : null);
+      const yMaxCountsEasy = Math.max(1, ...dataCaughtEasy.filter(v=>v!=null).map(v=>toNum(v)));
+      const countAxisEasy = axis(yMaxCountsEasy);
+      yAxes.yCounts = {
+        type:'linear', position:'left', beginAtZero:true,
+        suggestedMax: countAxisEasy.max,
+        ticks:{ stepSize: countAxisEasy.step, color: TEXT_COLOR },
+        grid:{ color: BORDER_COLOR }, border:{ color: BORDER_COLOR }
+      };
+
+      datasets.push({
+        label:'Поймано (лёгкий)',
+        data:dataCaughtEasy,
+        backgroundColor: COLOR.Snowflakes,
+        yAxisID:'yCounts', order:2,
+        barPercentage:bar, categoryPercentage:cat
+      });
+    }
+
+    const hardMask = d.map(s => (s.difficulty === 'hard'));
+    const anyHard  = hardMask.some(Boolean);
+
+    if (diff === 'hard' || (diff === 'all' && anyHard)) {
+      const caught = d.map((s,i) => hardMask[i] ? getCaught(s)  : null);
+      const missed = d.map((s,i) => hardMask[i] ? getMissed(s) : null);
+
+      if (!yAxes.yCounts) {
+        const yMaxCounts = Math.max(
+          1,
+          ...caught.filter(v=>v!=null).map(v=>toNum(v)),
+          ...missed.filter(v=>v!=null).map(v=>toNum(v))
+        );
+        const countAxis = axis(yMaxCounts);
+        yAxes.yCounts = {
+          type:'linear', position:'left', beginAtZero:true,
+          suggestedMax: countAxis.max,
+          ticks:{ stepSize: countAxis.step, color: TEXT_COLOR },
+          grid:{ color: BORDER_COLOR }, border:{ color: BORDER_COLOR }
+        };
+      }
+
+      datasets.push({
+        label:'Поймано (сложный)',
+        data: caught,
+        backgroundColor: COLOR.SnowflakesAlt,
+        yAxisID:'yCounts', order:2,
+        barPercentage:bar, categoryPercentage:cat
+      });
+      datasets.push({
+        label:'Пропущено (сложный)',
+        data: missed,
+        backgroundColor: COLOR.SnowflakesMissed,
+        yAxisID:'yCounts', order:2,
+        barPercentage:bar, categoryPercentage:cat
+      });
+    }
+
+    charts.snowflakesChart = new Chart(c.getContext('2d'), {
+      type:'bar',
+      data:{ labels, datasets },
+      options:{
+        responsive:true, maintainAspectRatio:false,
+        scales:{
+          x:{ type:'category', ticks:{ autoSkip:false, maxRotation:45, minRotation:45, color:TEXT_COLOR }, grid:{ color:BORDER_COLOR }, border:{ color:BORDER_COLOR } },
+          ...yAxes
+        },
+        plugins:{
+          legend:{ position:'top', ...legendRect() },
+          tooltip:{
+            callbacks:{
+              title:c=>{ const i=c[0].dataIndex; const dt=d[i].dt; return `#${i+1} — ${dt.toISOString().replace('T',' ').slice(0,19)}`; },
+              label:c=> c.dataset.yAxisID==='yTime'
+                ? `${c.dataset.label}: ${Number(c.parsed.y).toFixed(2)}`
+                : `${c.dataset.label}: ${c.parsed.y}`
+            }
+          },
+          zoom: zoomOpts
+        }
+      }
+    });
+  })();
+
+  /* ---------- Карточки ---------- */
+  (()=>{
+    const gid='MemoryMatchScene';
+    let d=f[gid];
+    const c=document.getElementById('memoryChart');
+    if(charts.memoryChart) charts.memoryChart.destroy();
+
+    const diff = document.querySelector('input[name="memoryDiff"]:checked').value;
+    if(d && diff !== 'all') d = d.filter(s => String(s.difficulty) === String(diff));
+    
+    if(!d||!d.length){
+      c.getContext('2d').clearRect(0,0,c.width,c.height);
+      document.getElementById('chart-container-memory').style.display = 'none';
+      return;
+    }
+    document.getElementById('chart-container-memory').style.display = 'block';
+    const cat=0.80;
+    const bar=1.00;
+    const labels=d.map(s=>oneLineLabel(s.dt));
+    const showTTF = ttfChecked && d.some(s => (s.ttf ?? 0) > 0);
+
+    const datasets = [];
+    const yAxes = {};
+
+    const yMaxTime = Math.max(1, ...d.map(s => s.duration), ...(showTTF ? d.map(s => s.ttf || 0) : []));
+    const timeAxis = axis(yMaxTime);
+    yAxes.yTime = {
+        type: 'linear',
+        position: 'right',
+        beginAtZero: true,
+        suggestedMax: timeAxis.max,
+        ticks: { stepSize: timeAxis.step, color: TEXT_COLOR },
+        grid: { drawOnChartArea: false },
+        border: { color: BORDER_COLOR }
+    };
+    datasets.push({
+        type: 'line',
+        label: 'Длительность, с',
+        data: d.map(s => s.duration),
+        borderColor: COLOR.MemoryMatchScene,
+        backgroundColor: COLOR.MemoryMatchScene,
+        pointRadius: 3,
+        tension: 0.2,
+        yAxisID: 'yTime',
+        order: 1
+    });
+    if (showTTF) {
+        datasets.push({
             type: 'line',
             label: 'Время до первого выбора, с',
             data: d.map(s => s.ttf || null),
             borderColor: COLOR.TTF,
             backgroundColor: COLOR.TTF,
-            borderDash: [6,4],
             pointRadius: 3,
             tension: 0.2,
             yAxisID: 'yTime',
             order: 0
-          });
-        }
+        });
+    }
 
-        // --- Ось количества (левая) ---
-        const easyData = d.filter(s => s.difficulty === 'easy');
-        const hardData = d.filter(s => s.difficulty === 'hard');
+    const yMaxCounts = Math.max(1, ...d.map(s => Math.max(s.correctPairs || 0, s.errors || 0)));
+    const countAxis = axis(yMaxCounts);
+    yAxes.yCounts = {
+        type: 'linear',
+        position: 'left',
+        beginAtZero: true,
+        suggestedMax: countAxis.max,
+        ticks: { stepSize: countAxis.step, color: TEXT_COLOR },
+        grid: { color: BORDER_COLOR },
+        border: { color: BORDER_COLOR }
+    };
+    datasets.push({
+        label: 'Правильные пары',
+        data: d.map(s => s.correctPairs),
+        backgroundColor: COLOR.MemoryMatchScene,
+        yAxisID: 'yCounts',
+        order: 2,
+        barPercentage: bar,
+        categoryPercentage: cat
+    });
+    datasets.push({
+        label: 'Ошибки',
+        data: d.map(s => s.errors),
+        backgroundColor: COLOR.MemoryErr,
+        yAxisID: 'yCounts',
+        order: 2,
+        barPercentage: bar,
+        categoryPercentage: cat
+    });
 
-        let yMaxCounts = 1;
-        if (easyData.length) yMaxCounts = Math.max(yMaxCounts, ...easyData.map(s => s.correct||0));
-        if (hardData.length) yMaxCounts = Math.max(
-          yMaxCounts,
-          ...hardData.map(s => s.caught||0),
-          ...hardData.map(s => s.errors||0)
-        );
-
-        const countAxis = axis(yMaxCounts);
-        yAxes.yCounts = {
-          type: 'linear',
-          position: 'left',
-          beginAtZero: true,
-          suggestedMax: countAxis.max,
-          ticks: { stepSize: countAxis.step, color: '#000' },
-          grid: { color: '#E0E0E0' },
-          border: { color: '#AAA' }
-        };
-
-        // --- Датасеты по сложности (бар-сеты — как в Аквариуме) ---
-
-        // Лёгкий: правильные
-        if (diff === 'easy' || diff === 'all') {
-          const arr = d.map(s => s.difficulty === 'easy' ? (s.correct||0) : null);
-          if (arr.some(v=>v)) {
-            datasets.push({
-              label: 'Правильные (лёгкий)',
-              data: arr,
-              backgroundColor: "#9C27B0", // фиолетовый вспомогательный
-              yAxisID: 'yCounts',
-              order: 2,
-              barPercentage: bar,
-              categoryPercentage: cat
-            });
-          }
-        }
-
-        // Сложный: поймано
-        if (diff === 'hard' || diff === 'all') {
-          const arrCaught = d.map(s => s.difficulty === 'hard' ? (s.caught||0) : null);
-          if (arrCaught.some(v=>v)) {
-            datasets.push({
-              label: 'Поймано (сложный)',
-              data: arrCaught,
-              backgroundColor: '#26A69A',
-              yAxisID: 'yCounts',
-              order: 2,
-              barPercentage: bar,
-              categoryPercentage: cat
-            });
-          }
-          // Сложный: ошибки
-          const arrErr = d.map(s => s.difficulty === 'hard' ? (s.errors||0) : null);
-          if (arrErr.some(v=>v)) {
-            datasets.push({
-              label: 'Ошибки (сложный)',
-              data: arrErr,
-              backgroundColor: COLOR.ERR,
-              yAxisID: 'yCounts',
-              order: 2,
-              barPercentage: bar,
-              categoryPercentage: cat
-            });
-          }
-        }
-
-        charts.butterflyChart=new Chart(c.getContext('2d'), {
-          type: 'bar',
-          data: { labels, datasets },
-          options: {
+    charts.memoryChart=new Chart(c.getContext('2d'), {
+        type: 'bar',
+        data: { labels, datasets },
+        options: {
             responsive: true,
             maintainAspectRatio: false,
             scales: {
-              x: {
-                type: 'category',
-                ticks: { autoSkip: false, maxRotation: 45, minRotation: 45, color: '#000' },
-                grid: { color: '#E0E0E0' },
-                border: { color: '#AAA' }
-              },
-              ...yAxes
+                x: { type: 'category',
+                     ticks: { autoSkip: false, maxRotation: 45, minRotation: 45, color: TEXT_COLOR },
+                     grid: { color: BORDER_COLOR }, border: { color: BORDER_COLOR } },
+                ...yAxes
             },
             plugins: {
-              legend: { position: 'top', ...legendRect() },
-              tooltip: {
-                callbacks: {
-                  title: c => { const i = c[0].dataIndex; const dt = d[i].dt; return `#${i + 1} — ${dt.toISOString().replace('T', ' ').slice(0, 19)}` }
-                }
-              },
-              zoom: zoomOpts
-            }
-          }
-        });
-      })();
-
-      // Снежинки
-      (()=>{
-        const gid='Snowflakes';
-        const d=f[gid];
-        const c=document.getElementById('snowflakesChart');
-        if(charts.snowflakesChart) charts.snowflakesChart.destroy();
-        if(!d||!d.length){
-          c.getContext('2d').clearRect(0,0,c.width,c.height);
-          document.getElementById('chart-container-snowflakes').style.display = 'none';
-          return;
-        }
-        document.getElementById('chart-container-snowflakes').style.display = 'block';
-        
-        const showTTF = ttfChecked && d.some(s => (s.ttf ?? 0) > 0);
-
-        let yMax=Math.max(...d.map(s=>s.duration));
-        if(showTTF) yMax=Math.max(yMax,...d.map(s=>s.ttf));
-        const {step,max}=axis(yMax);
-        const labels=d.map(s=>oneLineLabel(s.dt));
-
-        const ds=[{
-          label:'Длительность, с',
-          data:d.map(s=>s.duration),
-          borderColor:COLOR[gid],
-          backgroundColor:COLOR[gid],
-          tension:.2,
-          fill:false,
-          pointRadius:4,
-          pointHoverRadius:5
-        }];
-        if(showTTF){
-          ds.push({
-            label:'Время до первого выбора, с',
-            data:d.map(s=>s.ttf),
-            borderColor:COLOR.TTF,
-            backgroundColor:COLOR.TTF,
-            borderDash:[4,2],
-            tension:.2,
-            fill:false,
-            pointRadius:4,
-            pointStyle:'rectRot',
-            pointHoverRadius:5
-          });
-        }
-
-        charts.snowflakesChart=new Chart(c.getContext('2d'),{
-          type:'line',
-          data:{labels,datasets:ds},
-          options:{
-            responsive:true,
-            maintainAspectRatio:false,
-            scales:{
-              x:{
-                type:'category',
-                ticks:{ autoSkip:false, maxRotation:45, minRotation:45, color:'#000' },
-                grid:{color:'#E0E0E0'},
-                border:{color:'#AAA'}
-              },
-              y:{suggestedMin:0,suggestedMax:max,ticks:{stepSize:step,color:'#000'},grid:{color:'#E0E0E0'},border:{color:'#AAA'}}
-            },
-            plugins:{
-              legend:{position:'top',...legendRect()},
-              tooltip:{callbacks:{title:c=>{const i=c[0].dataIndex; const dt=d[i].dt; return `#${i+1} — ${dt.toISOString().replace('T',' ').slice(0,19)}`},
-                                   label:c=>`${c.dataset.label}: ${c.parsed.y.toFixed(2)}`}},
-              zoom: zoomOpts
-            }}
-        });
-      })();
-
-      // Карточки
-      (()=>{
-        const gid='MemoryMatchScene';
-        let d=f[gid];
-        const c=document.getElementById('memoryChart');
-        if(charts.memoryChart) charts.memoryChart.destroy();
-
-        const diff = document.querySelector('input[name="memoryDiff"]:checked').value;
-        if(d) {
-            if (diff !== 'all') {
-                d = d.filter(s => String(s.difficulty) === String(diff));
+                legend: { position: 'top', ...legendRect() },
+                tooltip: { callbacks: { title: c => { const i = c[0].dataIndex; const dt = d[i].dt; return `#${i + 1} — ${dt.toISOString().replace('T', ' ').slice(0, 19)}` } } },
+                zoom: zoomOpts
             }
         }
-        
-        if(!d||!d.length){
-          c.getContext('2d').clearRect(0,0,c.width,c.height);
-          document.getElementById('chart-container-memory').style.display = 'none';
-          return;
+    });
+  })();
+
+  /* ---------- Фруктовая битва ---------- */
+  (()=> {
+    const gid = 'FrutGame';
+    let d = f[gid];
+    const c = document.getElementById('fruitChart');
+    if (charts.fruitChart) charts.fruitChart.destroy();
+
+    if (!d || !d.length) {
+      c.getContext('2d').clearRect(0,0,c.width,c.height);
+      document.getElementById('chart-container-fruit').style.display = 'none';
+      return;
+    }
+    document.getElementById('chart-container-fruit').style.display = 'block';
+
+    const labels = d.map(s => oneLineLabel(s.dt));
+
+    const ttfChk =
+      (document.getElementById('toggle-ttf')?.checked ?? false) ||
+      (document.getElementById('chkTTF')?.checked ?? false);
+    const showTTF = ttfChk && d.some(s => (s.ttf ?? 0) > 0);
+
+    const datasets = [];
+    const yAxes = {};
+    const cat = 0.80;
+    const bar = 1.00;
+
+    const yMaxTime = Math.max(1, ...(showTTF ? d.map(s => s.ttf || 0) : [1]));
+    const timeAxis = axis(yMaxTime);
+    yAxes.yTime = {
+      type: 'linear', position: 'right', beginAtZero: true,
+      display: showTTF,
+      suggestedMax: timeAxis.max,
+      ticks: { stepSize: timeAxis.step, color: TEXT_COLOR },
+      grid: { drawOnChartArea: false }, border: { color: BORDER_COLOR }
+    };
+
+    if (showTTF) {
+      datasets.push({
+        type: 'line',
+        label: 'Время до первого выбора, с',
+        data: d.map(s => s.ttf || null),
+        borderColor: COLOR.TTF, backgroundColor: COLOR.TTF,
+        pointRadius: 3, tension: 0.2,
+        yAxisID: 'yTime', order: 0
+      });
+    }
+
+    const isEasy = d.map(s => String(s.difficulty) === 'easy');
+    const isHard = d.map(s => String(s.difficulty) === 'hard');
+
+    const by = arr => arr.filter(v => v != null).map(v => Number(v) || 0);
+    const yMaxCounts = Math.max(
+      1,
+      ...by(d.map((s,i) => isEasy[i] ? (s.score || 0) : null)),
+      ...by(d.map((s,i) => isHard[i] ? (s.score || 0) : null)),
+      ...by(d.map((s,i) => isHard[i] ? (s.missed || 0) : null)),
+      ...by(d.map((s,i) => isHard[i] ? (s.errors || s.incorrect || 0) : null))
+    );
+    const countAxis = axis(yMaxCounts);
+    yAxes.yCounts = {
+      type: 'linear', position: 'left', beginAtZero: true,
+      suggestedMax: countAxis.max,
+      ticks: { stepSize: countAxis.step, color: TEXT_COLOR },
+      grid: { color: BORDER_COLOR }, border: { color: BORDER_COLOR }
+    };
+
+    const dataScoreEasy = d.map((s,i) => isEasy[i] ? (s.score || 0) : null);
+    datasets.push({
+      label: 'Очки (лёг.)',
+      data: dataScoreEasy,
+      backgroundColor: COLOR.FrutGame,
+      yAxisID: 'yCounts',
+      order: 2,
+      barPercentage: bar,
+      categoryPercentage: cat
+    });
+
+    const dataSlicedHard = d.map((s,i) => isHard[i] ? (s.score || 0) : null);
+    const dataMissedHard = d.map((s,i) => isHard[i] ? (s.missed || 0) : null);
+    const dataErrorsHard = d.map((s,i) => isHard[i] ? (s.errors || s.incorrect || 0) : null);
+
+    datasets.push({
+      label: 'Разрезано (сложн.)',
+      data: dataSlicedHard,
+      backgroundColor: COLOR.FrutSliced,
+      yAxisID: 'yCounts',
+      order: 2,
+      barPercentage: bar,
+      categoryPercentage: cat
+    });
+    datasets.push({
+      label: 'Пропущено (сложн.)',
+      data: dataMissedHard,
+      backgroundColor: COLOR.FrutMissed,
+      yAxisID: 'yCounts',
+      order: 2,
+      barPercentage: bar,
+      categoryPercentage: cat
+    });
+    datasets.push({
+      label: 'Ошибки (сложн.)',
+      data: dataErrorsHard,
+      backgroundColor: COLOR.FrutErr,
+      yAxisID: 'yCounts',
+      order: 2,
+      barPercentage: bar,
+      categoryPercentage: cat
+    });
+
+    charts.fruitChart = new Chart(c.getContext('2d'), {
+      type: 'bar',
+      data: { labels, datasets },
+      options: {
+        responsive: true, maintainAspectRatio: false,
+        scales: {
+          x: { type: 'category',
+               ticks: { autoSkip: false, maxRotation: 45, minRotation: 45, color: TEXT_COLOR },
+               grid: { color: BORDER_COLOR }, border: { color: BORDER_COLOR } },
+          ...yAxes
+        },
+        plugins: {
+          legend: { position: 'top', ...legendRect() },
+          tooltip: { callbacks: { title: c => {
+            const i = c[0].dataIndex;
+            const dt = d[i].dt;
+            return `#${i+1} — ${dt.toISOString().replace('T',' ').slice(0,19)}`;
+          }}},
+          zoom: zoomOpts
         }
-        document.getElementById('chart-container-memory').style.display = 'block';
-        const cat=0.80;
-        const bar=1.00;
-        const labels=d.map(s=>oneLineLabel(s.dt));
-        const showTTF = ttfChecked && d.some(s => (s.ttf ?? 0) > 0);
+      }
+    });
+  })();
 
-
-        const datasets = [];
-        const yAxes = {};
-
-        const yMaxTime = Math.max(1, ...d.map(s => s.duration), ...(showTTF ? d.map(s => s.ttf || 0) : []));
-        const timeAxis = axis(yMaxTime);
-        yAxes.yTime = {
-            type: 'linear',
-            position: 'right',
-            beginAtZero: true,
-            suggestedMax: timeAxis.max,
-            ticks: { stepSize: timeAxis.step, color: '#000' },
-            grid: { drawOnChartArea: false },
-            border: { color: '#AAA' }
-        };
-        datasets.push({
-            type: 'line',
-            label: 'Длительность, с',
-            data: d.map(s => s.duration),
-            borderColor: COLOR[gid],
-            backgroundColor: COLOR[gid],
-            pointRadius: 3,
-            tension: 0.2,
-            yAxisID: 'yTime',
-            order: 1
-        });
-        if (showTTF) {
-            datasets.push({
-                type: 'line',
-                label: 'Время до первого выбора, с',
-                data: d.map(s => s.ttf || null),
-                borderColor: COLOR.TTF,
-                backgroundColor: COLOR.TTF,
-                pointRadius: 3,
-                tension: 0.2,
-                yAxisID: 'yTime',
-                order: 0
-            });
-        }
-
-        const yMaxCounts = Math.max(1, ...d.map(s => Math.max(s.correctPairs || 0, s.errors || 0)));
-        const countAxis = axis(yMaxCounts);
-        yAxes.yCounts = {
-            type: 'linear',
-            position: 'left',
-            beginAtZero: true,
-            suggestedMax: countAxis.max,
-            ticks: { stepSize: countAxis.step, color: '#000' },
-            grid: { color: '#E0E0E0' },
-            border: { color: '#AAA' }
-        };
-        datasets.push({
-            label: 'Правильные пары',
-            data: d.map(s => s.correctPairs),
-            backgroundColor: '#FFA726',
-            yAxisID: 'yCounts',
-            order: 2,
-            barPercentage: bar,
-            categoryPercentage: cat
-        });
-        datasets.push({
-            label: 'Ошибки',
-            data: d.map(s => s.errors),
-            backgroundColor: COLOR.ERR,
-            yAxisID: 'yCounts',
-            order: 2,
-            barPercentage: bar,
-            categoryPercentage: cat
-        });
-
-        charts.memoryChart=new Chart(c.getContext('2d'), {
-            type: 'bar',
-            data: { labels, datasets },
-            options: {
-                responsive: true,
-                maintainAspectRatio: false,
-                scales: {
-                    x: {
-                        type: 'category',
-                        ticks: { autoSkip: false, maxRotation: 45, minRotation: 45, color: '#000' },
-                        grid: { color: '#E0E0E0' },
-                        border: { color: '#AAA' }
-                    },
-                    ...yAxes
-                },
-                plugins: {
-                    legend: { position: 'top', ...legendRect() },
-                    tooltip: { callbacks: { title: c => { const i = c[0].dataIndex; const dt = d[i].dt; return `#${i + 1} — ${dt.toISOString().replace('T', ' ').slice(0, 19)}` } } },
-                    zoom: zoomOpts
-                }
-            }
-        });
-      })();
-
-      // Фруктовая битва
-      (()=>{
-        const gid='FrutGame';
-        const d=f[gid];
-        const c=document.getElementById('fruitChart');
-        if(charts.fruitChart) charts.fruitChart.destroy();
-        if(!d||!d.length){
-          c.getContext('2d').clearRect(0,0,c.width,c.height);
-          document.getElementById('chart-container-fruit').style.display = 'none';
-          return;
-        }
-        document.getElementById('chart-container-fruit').style.display = 'block';
-
-        const labels=d.map(s=>oneLineLabel(s.dt));
-        const showTTF = ttfChecked && d.some(s => (s.ttf ?? 0) > 0);
-
-
-        const datasets = [];
-        const yAxes = {};
-
-        const yMaxTime = showTTF ? Math.max(1, ...d.map(s => s.ttf || 0)) : 1;
-        const timeAxis = axis(yMaxTime);
-        yAxes.yTime = {
-            type: 'linear',
-            position: 'right',
-            display: showTTF,
-            beginAtZero: true,
-            suggestedMax: timeAxis.max,
-            ticks: { stepSize: timeAxis.step, color: '#000' },
-            grid: { drawOnChartArea: false },
-            border: { color: '#AAA' }
-        };
-
-        if (showTTF) {
-            datasets.push({
-                type: 'line',
-                label: 'Время до первого выбора, с',
-                data: d.map(s => s.ttf || null),
-                borderColor: COLOR.TTF,
-                backgroundColor: COLOR.TTF,
-                pointRadius: 3,
-                tension: 0.2,
-                yAxisID: 'yTime',
-                order: 0
-            });
-        }
-        
-        const yMaxScore = Math.max(1, ...d.map(s => s.score || 0));
-        const scoreAxis = axis(yMaxScore);
-        yAxes.yScore = {
-            type: 'linear',
-            position: 'left',
-            beginAtZero: true,
-            suggestedMax: scoreAxis.max,
-            ticks: { stepSize: scoreAxis.step, color: '#000' },
-            grid: { color: '#E0E0E0' },
-            border: { color: '#AAA' }
-        };
-        datasets.push({
-            label: 'Очки',
-            data: d.map(s => s.score),
-            backgroundColor: COLOR[gid],
-            yAxisID: 'yScore',
-            order: 1
-        });
-
-        charts.fruitChart=new Chart(c.getContext('2d'), {
-            type: 'bar',
-            data: { labels, datasets },
-            options: {
-                responsive: true,
-                maintainAspectRatio: false,
-                scales: {
-                    x: {
-                        type: 'category',
-                        ticks: { autoSkip: false, maxRotation: 45, minRotation: 45, color: '#000' },
-                        grid: { color: '#E0E0E0' },
-                        border: { color: '#AAA' }
-                    },
-                    ...yAxes
-                },
-                plugins: {
-                    legend: { position: 'top', ...legendRect() },
-                    tooltip: { callbacks: { title: c => { const i = c[0].dataIndex; const dt = d[i].dt; return `#${i + 1} — ${dt.toISOString().replace('T', ' ').slice(0, 19)}` } } },
-                    zoom: zoomOpts
-                }
-            }
-        });
-      })();
     }
 
     function applyFiltersAndRender(){
@@ -1330,8 +1488,10 @@ const ttfChecked =
       link.click();
     }
 
-    // Запуск приложения
-    document.addEventListener('DOMContentLoaded', start);
+    fetch('data.json')
+      .then(r => r.json())
+      .then(data => { window.PROFILE_DATA = data; start(); })
+      .catch(() => { start(); });
   })();
   </script>
 </body>
