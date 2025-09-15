@@ -207,8 +207,8 @@
       </div>
       <div class="difficulty-filter" data-chart="memory">
         <label><input type="radio" name="memoryDiff" value="all" checked> Все</label>
-        <label><input type="radio" name="memoryDiff" value="4"> 4 карточки</label>
-        <label><input type="radio" name="memoryDiff" value="12"> 12 карточек</label>
+        <label><input type="radio" name="memoryDiff" value="easy"> Легкий</label>
+        <label><input type="radio" name="memoryDiff" value="hard"> Сложный</label>
       </div>
       <canvas id="memoryChart"></canvas>
     </div>
@@ -220,6 +220,11 @@
           <button data-reset-id="fruitChart">Сбросить зум</button>
           <button data-download-id="fruitChart">PNG</button>
         </div>
+      </div>
+       <div class="difficulty-filter" data-chart="fruit">
+        <label><input type="radio" name="fruitDiff" value="all" checked> Все</label>
+        <label><input type="radio" name="fruitDiff" value="easy"> Легкий</label>
+        <label><input type="radio" name="fruitDiff" value="hard"> Сложный</label>
       </div>
       <canvas id="fruitChart"></canvas>
     </div>
@@ -238,6 +243,66 @@
     Chart.defaults.font.family=css.getPropertyValue('--font-main').trim();
     Chart.defaults.layout = Chart.defaults.layout || {};
     Chart.defaults.layout.padding = { bottom: 20 };
+
+    // ====== ГРАДИЕНТЫ ======
+    // палитра
+    const GRAD = {
+      // Сверху вниз, как в задаче.
+      missed:   ['#00ffa9', '#dd4dff'], // пропуски: верх - бирюзовый, низ - фиолетовый
+      error:    ['#ffe53b', '#ff2525'], // ошибки: верх - желтый, низ - красный
+      correct:  ['#ff0a6c', '#4a3cdb'], // правильные: верх - розовый, низ - темно-синий
+      duration: ['#01e6ff','#055eea'],
+      ttf:      ['#f3ef46','#18d94f']
+    };
+
+    /**
+     * Создает вертикальный градиент для столбика диаграммы,
+     * растягивая его на всю высоту области диаграммы для лучшей видимости.
+     */
+    function makeBarGradient(ctx, type){
+     const { chart, chartArea } = ctx;
+     const [colorStart, colorEnd] = GRAD[type] || ['#999','#666'];
+
+     if (!chartArea) {
+       const g = chart.ctx.createLinearGradient(0, 0, 0, 300);
+       g.addColorStop(0, colorStart); g.addColorStop(1, colorEnd);
+       return g;
+     }
+
+     // Градиент на всю высоту, СВЕРХУ ВНИЗ.
+     const g = chart.ctx.createLinearGradient(0, chartArea.top, 0, chartArea.bottom);
+     g.addColorStop(0, colorStart); // Верхний цвет
+     g.addColorStop(1, colorEnd);   // Нижний цвет
+     return g;
+    }
+
+    // горизонтальный градиент для ЛИНИИ (по всей ширине чарта)
+    function makeLineGradient(ctx, type){
+      const {chart, chartArea} = ctx;
+      if (!chartArea) {
+        const g = chart.ctx.createLinearGradient(0,0,300,0);
+        const [a,b]=GRAD[type]||['#999','#666'];
+        g.addColorStop(0,a); g.addColorStop(1,b);
+        return g;
+      }
+      const {left, right} = chartArea;
+      const g = chart.ctx.createLinearGradient(left, 0, right, 0);
+      const [a,b]=GRAD[type]||['#999','#666'];
+      g.addColorStop(0,a); g.addColorStop(1,b);
+      return g;
+    }
+
+    // градиент для свотча легенды (горизонтальный)
+    function legendGradient(chart, type){
+      const ca = chart.chartArea;
+      const ctx = chart.ctx;
+      const left = ca ? ca.left : 0;
+      const right = ca ? ca.right : 120;
+      const g = ctx.createLinearGradient(left,0,right,0);
+      const [a,b]=GRAD[type]||['#999','#666'];
+      g.addColorStop(0,a); g.addColorStop(1,b);
+      return g;
+    }
 
     const pieLabelPlugin = {
       id: 'pieLabelPlugin',
@@ -270,8 +335,6 @@
 
   <script>
   (() => {
-    let __uwpLibTries = 0;
-
     const NAME = {
       GameScene: 'Цветочный сад',
       Fish: 'Аквариум',
@@ -281,41 +344,18 @@
       FrutGame: 'Фруктовая битва'
     };
 
-    /* 🎨 ПАЛИТРЫ ИГР */
-    const COLOR = {
-      // Цветочный сад — пастель
-      GameScene: '#85C3CE',        // длительность/правильные
-      GameSceneAlt: '#F78770',     // ошибки (hard)
+    /* Цвета для пирога и маркеров (оставляем как было) */
+   const COLOR = {
+  GameScene: '#e40091',          // Цветочный сад
+  Fish: '#5800b6',              // Аквариум
+  ButterflyGameScene: '#0067f0', // Бабочки
+  Snowflakes: '#14ae59',        // Снежинки
+  MemoryMatchScene: '#ffca00',  // Карточки
+  FrutGame: '#ff5d33',          // Фруктовая битва
+  ERR: '#ff5d33',
+  TTF: '#FFD700'
+};
 
-      // Аквариум — морская палитра
-      Fish: '#0B184B',             // правильные
-      FishAlt: '#0296A7',          // ошибки
-      FishMissed: '#5FCAD8',       // пропущенные
-
-      // Бабочки — зелёно-фиолетовые
-      ButterflyGameScene: '#CCABDB', // правильные (easy)
-      ButterflyCaught: '#089770',    // поймано (hard)
-      ButterflyErr: '#E53935',       // ошибки (hard)
-
-      // Снежинки — холодные
-      Snowflakes: '#54CDCC',         // поймано (easy)
-      SnowflakesAlt: '#215522',      // поймано (hard)
-      SnowflakesMissed: '#DCD964',   // пропущено (hard)
-
-      // Карточки — оранжево-бежевые
-      MemoryMatchScene: '#FFA726',   // пары
-      MemoryErr: '#E53935',          // ошибки
-
-      // Фрукты — тёплые
-      FrutGame: '#E26B65',           // очки (easy)
-      FrutSliced: '#26A69A',         // разрезано (hard)
-      FrutMissed: '#FFA726',         // пропущено (hard)
-      FrutErr: '#E53935',            // ошибки (hard)
-
-      // глобальные
-      ERR: '#E53935',
-      TTF: '#FFD700'                 // всегда жёлтый
-    };
 
     const CANON = ['GameScene','Fish','ButterflyGameScene','Snowflakes','MemoryMatchScene','FrutGame'];
     const ALIAS = {
@@ -329,12 +369,7 @@
 
     let profileData = null;
     const allSessions = {
-      GameScene: [],
-      Fish: [],
-      ButterflyGameScene: [],
-      Snowflakes: [],
-      MemoryMatchScene: [],
-      FrutGame: []
+      GameScene: [], Fish: [], ButterflyGameScene: [], Snowflakes: [], MemoryMatchScene: [], FrutGame: []
     };
     let filter = { indexRange:[1,1], dateRange:[null,null] };
     const charts = {};
@@ -386,32 +421,19 @@
     }
 
     async function start(){
-      if (!okLibs()) {
-        showWarn(true);
-        showFileLoader();
-        return;
-      }
+      if (!okLibs()) { showWarn(true); showFileLoader(); return; }
       showWarn(false);
 
-      if (window.PROFILE_DATA) {
-        profileData = window.PROFILE_DATA;
-        initUI();
-        return;
-      }
-      
+      if (window.PROFILE_DATA) { profileData = window.PROFILE_DATA; initUI(); return; }
       const {profilePath}=getQueryParams();
       if(profilePath){
         try{
           const r=await fetch(profilePath);
           if(!r.ok) throw new Error('HTTP '+r.status);
           profileData=await r.json();
-          initUI();
-          return;
-        }catch(err){
-          console.warn('Не удалось загрузить профиль через fetch:', err);
-        }
+          initUI(); return;
+        }catch(err){ console.warn('Не удалось загрузить профиль через fetch:', err); }
       }
-      
       showFileLoader();
     }
 
@@ -422,13 +444,8 @@
       const c=profileData.creationDate?new Date(profileData.creationDate):null;
       const l=profileData.lastPlayedDate?new Date(profileData.lastPlayedDate):null;
       const fmt=d=>!d?'—':`${String(d.getDate()).padStart(2,'0')}.${String(d.getMonth()+1).padStart(2,'0')}.${String(d.getFullYear()).slice(-2)} ${String(d.getHours()).padStart(2,'0')}:${String(d.getMinutes()).padStart(2,'0')}:${String(d.getSeconds()).padStart(2,'0')}`;
-      
       [{label:'Имя',value:name},{label:'Дата регистрации',value:fmt(c)},{label:'Последняя активность',value:fmt(l)}]
-        .forEach(it=>{
-          const li=document.createElement('li');
-          li.textContent=`${it.label}: ${it.value}`;
-          lst.appendChild(li);
-        });
+        .forEach(it=>{ const li=document.createElement('li'); li.textContent=`${it.label}: ${it.value}`; lst.appendChild(li); });
 
       Object.keys(allSessions).forEach(g => allSessions[g] = []);
       (profileData.statsByGame || []).forEach(g => {
@@ -439,14 +456,12 @@
           const difficultyRaw = (g.gameId === 'HardButterflyGameScene') ? 'hard' : (s.difficulty ?? '');
           const difficulty = String(difficultyRaw).toLowerCase();
           const ttf = Number(s.timeToFirstCorrectAction ?? 0);
-
           let caught = Number(s.caught ?? 0);
           let errors = Number(s.errors ?? 0);
           if (difficulty === 'hard') {
             if (caught === 0 && (s.correctActions ?? 0) > 0)   caught = Number(s.correctActions);
             if (errors === 0 && (s.incorrectActions ?? 0) > 0) errors = Number(s.incorrectActions);
           }
-
           allSessions[gidCanon].push({
             dt: new Date(s.startTime),
             duration: Number(s.durationInSeconds || 0),
@@ -460,7 +475,6 @@
             correctPairs: Number(s.correctPairs || 0),
             score: Number(s.score || 0)
           });
-
         });
       });
 
@@ -488,33 +502,15 @@
       const eI=document.getElementById('end-date');
       const toVal=d=>!d?'':`${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}T${String(d.getHours()).padStart(2,'0')}:${String(d.getMinutes()).padStart(2,'0')}`;
       sI.value=toVal(minD); eI.value=toVal(maxD);
-      sI.onchange=()=>{
-        const d=new Date(sI.value);
-        if(!isNaN(d)) {
-          filter.dateRange[0]=d;
-          applyFiltersAndRender();
-        }
-      };
-      eI.onchange=()=>{
-        const d=new Date(eI.value);
-        if(!isNaN(d)) {
-          filter.dateRange[1]=d;
-          applyFiltersAndRender();
-        }
-      };
+      sI.onchange=()=>{ const d=new Date(sI.value); if(!isNaN(d)) { filter.dateRange[0]=d; applyFiltersAndRender(); } };
+      eI.onchange=()=>{ const d=new Date(eI.value); if(!isNaN(d)) { filter.dateRange[1]=d; applyFiltersAndRender(); } };
       document.getElementById('toggle-ttf').onchange=()=>applyFiltersAndRender();
 
       document.getElementById('export-csv').onclick=exportCSV;
-      
-      document.querySelectorAll('.difficulty-filter input').forEach(r => {
-        r.onchange = () => applyFiltersAndRender();
-      });
+      document.querySelectorAll('.difficulty-filter input').forEach(r => { r.onchange = () => applyFiltersAndRender(); });
       document.querySelectorAll('.chart-controls button').forEach(b=>{
         if(b.dataset.resetId){
-          b.onclick=()=>{
-            const ch=charts[b.dataset.resetId];
-            if(ch&&ch.resetZoom) ch.resetZoom();
-          };
+          b.onclick=()=>{ const ch=charts[b.dataset.resetId]; if(ch&&ch.resetZoom) ch.resetZoom(); };
         }
         if(b.dataset.downloadId){
           b.addEventListener('click',()=>{
@@ -550,21 +546,29 @@
       const easy = allSessions.ButterflyGameScene || [];
       const hard = allSessions.HardButterflyGameScene || [];
       if (easy.length || hard.length) {
-        const ts = s => (s.dt instanceof Date && !isNaN(s.dt))
-          ? s.dt.getTime()
+        const ts = s => (s.dt instanceof Date && !isNaN(s.dt)) ? s.dt.getTime()
           : Date.parse(s.startTime || s.dt || 0) || 0;
-
         let merged = [...easy, ...hard];
         merged = merged.filter(s => (!dS || s.dt >= dS) && (!dE || s.dt <= dE));
         merged.sort((a, b) => ts(a) - ts(b));
-        merged = merged.filter((_, idx) => {
-          const i = idx + 1;
-          return i >= iS && i <= iE;
-        });
-
+        merged = merged.filter((_, idx) => { const i = idx + 1; return i >= iS && i <= iE; });
         res.ButterflyGameScene = merged;
       }
 
+      if (res.FrutGame && res.FrutGame.length) {
+        res.FrutGame = res.FrutGame
+          .map(s => {
+            const dt = (s.dt instanceof Date && !isNaN(s.dt)) ? s.dt : new Date(s.startTime || s.dt || 0);
+            let duration =
+              (typeof s.duration === 'number') ? s.duration :
+              (typeof s.durationInSeconds === 'number') ? s.durationInSeconds :
+              (s.startTime && s.endTime)
+                ? (Date.parse(s.endTime) - Date.parse(s.startTime)) / 1000
+                : 0;
+            return { ...s, dt, duration: Number.isFinite(duration) ? duration : 0 };
+          })
+          .sort((a,b) => a.dt - b.dt);
+      }
       return res;
     }
 
@@ -604,15 +608,9 @@
         type:'doughnut',
         data:{labels,datasets:[{data,backgroundColor:colors,borderWidth:0}]},
         options:{
-          responsive:true,
-          maintainAspectRatio:false,
-          plugins:{
-            legend:{display:false},
-            tooltip:{
-              callbacks:{
-                label:c=>`${c.label}: ${formatDuration(c.parsed)} (${sum? (c.parsed/sum*100).toFixed(1):0}%)`
-              }
-            }
+          responsive:true, maintainAspectRatio:false,
+          plugins:{ legend:{display:false},
+            tooltip:{ callbacks:{ label:c=>`${c.label}: ${formatDuration(c.parsed)} (${sum? (c.parsed/sum*100).toFixed(1):0}%)` } }
           },
           cutout:'60%'
         },
@@ -635,24 +633,37 @@
       });
     }
 
+    // Легенда с корректным градиентом
     function legendRect(){
       return {
         labels: {
           usePointStyle: false,
           color: TEXT_COLOR,
+          // генерируем свотчи-градиенты на лету
           generateLabels(chart) {
             const ds = chart.data.datasets || [];
-            return ds.map((d,i)=>({
-              text: d.label,
-              fillStyle: d.borderColor || d.backgroundColor,
-              strokeStyle: d.borderColor || d.backgroundColor,
-              hidden: !chart.isDatasetVisible(i),
-              datasetIndex: i
-            }));
+            return ds.map((d,i)=>{
+              const type = d._gradType || 'correct';
+              // маленький горизонтальный градиент для квадратика
+              const g = chart.ctx.createLinearGradient(0, 0, 24, 0);
+              // Убедимся, что порядок цветов в легенде соответствует графику (start -> end)
+              const [colorStart, colorEnd] = GRAD[type] || ['#999', '#666'];
+              g.addColorStop(0, colorStart);
+              g.addColorStop(1, colorEnd);
+
+              return {
+                text: d.label,
+                fillStyle: g,
+                strokeStyle: g,
+                hidden: !chart.isDatasetVisible(i),
+                datasetIndex: i
+              };
+            });
           }
         }
       };
     }
+
 
     const zoomOpts = {
       zoom:{wheel:{enabled:true},pinch:{enabled:true},mode:'x'},
@@ -717,23 +728,20 @@
     };
 
     datasets.push({
-      type:'line',
-      label:'Длительность, с',
-      data:d.map(s=>s.duration),
-      borderColor:COLOR.GameScene,
-      backgroundColor:COLOR.GameScene,
-      pointRadius:3, tension:0.2,
-      yAxisID:'yTime', order:1
+      type:'line', label:'Длительность, с', data:d.map(s=>s.duration),
+      borderColor:(ctx)=>makeLineGradient(ctx,'duration'),
+      backgroundColor:(ctx)=>makeLineGradient(ctx,'duration'),
+      pointRadius:3, tension:0.2, yAxisID:'yTime', order:1,
+      _gradType:'duration'
     });
 
     if (showTTF) {
       datasets.push({
-        type:'line',
-        label:'Время до первого выбора, с',
-        data:d.map(s=>s.ttf||null),
-        borderColor:COLOR.TTF, backgroundColor:COLOR.TTF,
-        borderDash:[6,4], pointRadius:3, tension:0.2,
-        yAxisID:'yTime', order:0
+        type:'line', label:'Время до первого выбора, с', data:d.map(s=>s.ttf||null),
+        borderColor:(ctx)=>makeLineGradient(ctx,'ttf'),
+        backgroundColor:(ctx)=>makeLineGradient(ctx,'ttf'),
+        borderDash:[6,4], pointRadius:3, tension:0.2, yAxisID:'yTime', order:0,
+        _gradType:'ttf'
       });
     }
 
@@ -741,11 +749,7 @@
     const dataErrorsHard = d.map(s => s.difficulty === 'hard' ? (s.incorrect || s.incorrectActions || s.errors || 0) : null);
 
     if (dataCorrect.some(v => v>0) || dataErrorsHard.some(v => v!=null && v>0)) {
-      const yMaxCounts = Math.max(
-        1,
-        ...dataCorrect,
-        ...dataErrorsHard.filter(v=>v!=null).map(v=>Number(v)||0)
-      );
+      const yMaxCounts = Math.max(1, ...dataCorrect, ...dataErrorsHard.filter(v=>v!=null).map(v=>Number(v)||0));
       const countAxis = axis(yMaxCounts);
       yAxes.yCounts = {
         type:'linear', position:'left', beginAtZero:true,
@@ -757,18 +761,20 @@
       datasets.push({
         label:'Правильные',
         data:dataCorrect,
-        backgroundColor:COLOR.GameScene,
-        yAxisID:'yCounts', order:2,
-        barPercentage:bar, categoryPercentage:cat
+        backgroundColor:(ctx)=>makeBarGradient(ctx,'correct'),
+        borderWidth: 0,
+        yAxisID:'yCounts', order:2, barPercentage:bar, categoryPercentage:cat,
+        _gradType:'correct'
       });
 
       if (dataErrorsHard.some(v => v != null && Number(v) > 0)) {
         datasets.push({
           label:'Ошибки (сложный)',
           data: dataErrorsHard,
-          backgroundColor: COLOR.GameSceneAlt,
-          yAxisID:'yCounts', order:2,
-          barPercentage: bar, categoryPercentage: cat
+          backgroundColor:(ctx)=>makeBarGradient(ctx,'error'),
+          borderWidth: 0,
+          yAxisID:'yCounts', order:2, barPercentage: bar, categoryPercentage: cat,
+          _gradType:'error'
         });
       }
     }
@@ -784,15 +790,12 @@
               grid:{ color:BORDER_COLOR }, border:{ color:BORDER_COLOR }},
           ...yAxes
         },
-        plugins:{
-          legend:{ position:'top', ...legendRect() },
+        plugins:{ legend:{ position:'top', ...legendRect() },
           tooltip:{ callbacks:{
-            title:c=>{ const i=c[0].dataIndex; const dt=d[i].dt;
-                       return `#${i+1} — ${dt.toISOString().replace('T',' ').slice(0,19)}`; },
+            title:c=>{ const i=c[0].dataIndex; const dt=d[i].dt; return `#${i+1} — ${dt.toISOString().replace('T',' ').slice(0,19)}`; },
             label:c=> c.dataset.yAxisID==='yTime'
               ? `${c.dataset.label}: ${Number(c.parsed.y).toFixed(2)}`
-              : `${c.dataset.label}: ${c.parsed.y}`
-          }},
+              : `${c.dataset.label}: ${c.parsed.y}` } },
           zoom: zoomOpts
         }
       }
@@ -806,15 +809,9 @@
     let d=f[gid];
     const c=document.getElementById('fishChart');
     if(charts.fishChart) charts.fishChart.destroy();
-    
     const diff = document.querySelector('input[name="fishDiff"]:checked').value;
     if (d && diff !== 'all') d = d.filter(s => s.difficulty === diff);
-
-    if(!d||!d.length){
-      c.getContext('2d').clearRect(0,0,c.width,c.height);
-      document.getElementById('chart-container-fish').style.display = 'none';
-      return;
-    }
+    if(!d||!d.length){ c.getContext('2d').clearRect(0,0,c.width,c.height); document.getElementById('chart-container-fish').style.display = 'none'; return; }
     document.getElementById('chart-container-fish').style.display = 'block';
 
     const labels=d.map(s=>oneLineLabel(s.dt));
@@ -828,57 +825,43 @@
     const stepTime=Math.max(1,Math.ceil(yMaxTime/4));
     const suggestedMaxTime=Math.max(yMaxTime,stepTime*4);
 
-    const cat=0.80;
-    const bar=1.00;
+    const cat=0.80, bar=1.00;
 
     const datasets=[
       {
         label:'Правильные',
         data:d.map(s=>s.correct),
-        backgroundColor:COLOR.Fish,
-        borderColor:COLOR.Fish,
-        borderWidth:0,
-        yAxisID:'yCounts',
-        order:2,
-        barPercentage:bar,
-        categoryPercentage:cat
+        backgroundColor:(ctx)=>makeBarGradient(ctx,'correct'),
+        borderWidth: 0,
+        yAxisID:'yCounts', order:2, barPercentage:bar, categoryPercentage:cat,
+        _gradType:'correct'
       },
       {
         label:'Ошибки',
         data:d.map(s=>s.incorrect),
-        backgroundColor:COLOR.FishAlt,
-        borderColor:COLOR.FishAlt,
-        borderWidth:0,
-        yAxisID:'yCounts',
-        order:2,
-        barPercentage:bar,
-        categoryPercentage:cat
+        backgroundColor:(ctx)=>makeBarGradient(ctx,'error'),
+        borderWidth: 0,
+        yAxisID:'yCounts', order:2, barPercentage:bar, categoryPercentage:cat,
+        _gradType:'error'
       }
     ];
-
     if (d.some(s => s.missed > 0)) {
       datasets.push({
         label: 'Пропущенные',
         data: d.map(s => s.missed),
-        backgroundColor: COLOR.FishMissed,
-        yAxisID: 'yCounts',
-        order: 2,
-        barPercentage: bar,
-        categoryPercentage: cat
+        backgroundColor:(ctx)=>makeBarGradient(ctx,'missed'),
+        borderWidth: 0,
+        yAxisID: 'yCounts', order: 2, barPercentage: bar, categoryPercentage: cat,
+        _gradType:'missed'
       });
     }
-
     if(showTTF){
       datasets.push({
-        type:'line',
-        label:'Время до первого выбора, с',
-        data:d.map(s=>s.ttf||null),
-        borderColor:COLOR.TTF,
-        backgroundColor:COLOR.TTF,
-        pointRadius:3,
-        tension:0.2,
-        yAxisID:'yTime',
-        order:1
+        type:'line', label:'Время до первого выбора, с', data:d.map(s=>s.ttf||null),
+        borderColor:(ctx)=>makeLineGradient(ctx,'ttf'),
+        backgroundColor:(ctx)=>makeLineGradient(ctx,'ttf'),
+        pointRadius:3, tension:0.2, yAxisID:'yTime', order:1,
+        _gradType:'ttf'
       });
     }
 
@@ -886,8 +869,7 @@
       type:'bar',
       data:{labels,datasets},
       options:{
-        responsive:true,
-        maintainAspectRatio:false,
+        responsive:true, maintainAspectRatio:false,
         scales:{
           x:{ type:'category', ticks:{ autoSkip:false, maxRotation:45, minRotation:45, color:TEXT_COLOR,
                 callback:function(v){ return this.getLabelForValue(v); } },
@@ -899,7 +881,7 @@
             suggestedMax:suggestedMaxTime, ticks:{stepSize:stepTime,color:TEXT_COLOR},
             grid:{drawOnChartArea:false}, border:{color:BORDER_COLOR}}
         },
-        plugins:{legend:{position:'top',...legendRect()},
+        plugins:{ legend:{position:'top',...legendRect()},
           tooltip:{callbacks:{title:c=>{const i=c[0].dataIndex; const dt=d[i].dt; return `#${i+1} — ${dt.toISOString().replace('T',' ').slice(0,19)}`},
                                label:c=> c.dataset.yAxisID==='yTime'
                                  ? `${c.dataset.label}: ${c.parsed.y.toFixed(2)}`
@@ -920,15 +902,10 @@
     const diff = document.querySelector('input[name="butterflyDiff"]:checked').value;
     if (d && diff !== 'all') d = d.filter(s => s.difficulty === diff);
 
-    if(!d||!d.length){
-      c.getContext('2d').clearRect(0,0,c.width,c.height);
-      document.getElementById('chart-container-butterfly').style.display = 'none';
-      return;
-    }
+    if(!d||!d.length){ c.getContext('2d').clearRect(0,0,c.width,c.height); document.getElementById('chart-container-butterfly').style.display = 'none'; return; }
     document.getElementById('chart-container-butterfly').style.display = 'block';
 
-    const ts = s => (s.dt instanceof Date && !isNaN(s.dt)) ? s.dt.getTime()
-             : Date.parse(s.startTime || s.dt || 0) || 0;
+    const ts = s => (s.dt instanceof Date && !isNaN(s.dt)) ? s.dt.getTime() : Date.parse(s.startTime || s.dt || 0) || 0;
     d = d.slice().sort((a,b)=> ts(a) - ts(b));
     const labels = d.map(s => oneLineLabel(s.dt instanceof Date ? s.dt : new Date(s.startTime)));
 
@@ -943,30 +920,25 @@
 
     const yMaxTime = Math.max(1, ...d.map(s => s.duration), ...(showTTF ? d.map(s => s.ttf || 0) : []));
     const timeAxis = axis(yMaxTime);
-    yAxes.yTime = {
-      type: 'linear', position: 'right', beginAtZero: true,
+    yAxes.yTime = { type: 'linear', position: 'right', beginAtZero: true,
       suggestedMax: timeAxis.max, ticks: { stepSize: timeAxis.step, color: TEXT_COLOR },
-      grid: { drawOnChartArea: false }, border: { color: BORDER_COLOR }
-    };
+      grid: { drawOnChartArea: false }, border: { color: BORDER_COLOR } };
 
     datasets.push({
-      type: 'line',
-      label: 'Длительность, с',
-      data: d.map(s => s.duration),
-      borderColor: COLOR.ButterflyGameScene,
-      backgroundColor: COLOR.ButterflyGameScene,
-      pointRadius: 3, tension: 0.2,
-      yAxisID: 'yTime', order: 1
+      type: 'line', label: 'Длительность, с', data: d.map(s => s.duration),
+      borderColor:(ctx)=>makeLineGradient(ctx,'duration'),
+      backgroundColor:(ctx)=>makeLineGradient(ctx,'duration'),
+      pointRadius: 3, tension: 0.2, yAxisID: 'yTime', order: 1,
+      _gradType:'duration'
     });
 
     if (showTTF) {
       datasets.push({
-        type: 'line',
-        label: 'Время до первого выбора, с',
-        data: d.map(s => s.ttf || null),
-        borderColor: COLOR.TTF, backgroundColor: COLOR.TTF,
-        borderDash: [6,4], pointRadius: 3, tension: 0.2,
-        yAxisID: 'yTime', order: 0
+        type: 'line', label: 'Время до первого выбора, с', data: d.map(s => s.ttf || null),
+        borderColor:(ctx)=>makeLineGradient(ctx,'ttf'),
+        backgroundColor:(ctx)=>makeLineGradient(ctx,'ttf'),
+        borderDash: [6,4], pointRadius: 3, tension: 0.2, yAxisID: 'yTime', order: 0,
+        _gradType:'ttf'
       });
     }
 
@@ -975,19 +947,12 @@
 
     let yMaxCounts = 1;
     if (easyData.length) yMaxCounts = Math.max(yMaxCounts, ...easyData.map(s => s.correct||0));
-    if (hardData.length) yMaxCounts = Math.max(
-      yMaxCounts,
-      ...hardData.map(s => s.caught||0),
-      ...hardData.map(s => s.errors||0)
-    );
+    if (hardData.length) yMaxCounts = Math.max(yMaxCounts, ...hardData.map(s => s.caught||0), ...hardData.map(s => s.errors||0));
 
     const countAxis = axis(yMaxCounts);
-    yAxes.yCounts = {
-      type: 'linear', position: 'left', beginAtZero: true,
-      suggestedMax: countAxis.max,
-      ticks: { stepSize: countAxis.step, color: TEXT_COLOR },
-      grid: { color: BORDER_COLOR }, border: { color: BORDER_COLOR }
-    };
+    yAxes.yCounts = { type: 'linear', position: 'left', beginAtZero: true,
+      suggestedMax: countAxis.max, ticks: { stepSize: countAxis.step, color: TEXT_COLOR },
+      grid: { color: BORDER_COLOR }, border: { color: BORDER_COLOR } };
 
     if (diff === 'easy' || diff === 'all') {
       const arr = d.map(s => s.difficulty === 'easy' ? (s.correct||0) : null);
@@ -995,9 +960,10 @@
         datasets.push({
           label: 'Правильные (лёгкий)',
           data: arr,
-          backgroundColor: COLOR.ButterflyGameScene,
-          yAxisID: 'yCounts', order: 2,
-          barPercentage: bar, categoryPercentage: cat
+          backgroundColor:(ctx)=>makeBarGradient(ctx,'correct'),
+          borderWidth: 0,
+          yAxisID: 'yCounts', order: 2, barPercentage: bar, categoryPercentage: cat,
+          _gradType:'correct'
         });
       }
     }
@@ -1008,9 +974,10 @@
         datasets.push({
           label: 'Поймано (сложный)',
           data: arrCaught,
-          backgroundColor: COLOR.ButterflyCaught,
-          yAxisID: 'yCounts', order: 2,
-          barPercentage: bar, categoryPercentage: cat
+          backgroundColor:(ctx)=>makeBarGradient(ctx,'correct'),
+          borderWidth: 0,
+          yAxisID: 'yCounts', order: 2, barPercentage: bar, categoryPercentage: cat,
+          _gradType:'correct'
         });
       }
       const arrErr = d.map(s => s.difficulty === 'hard' ? (s.errors||0) : null);
@@ -1018,9 +985,10 @@
         datasets.push({
           label: 'Ошибки (сложный)',
           data: arrErr,
-          backgroundColor: COLOR.ButterflyErr,
-          yAxisID: 'yCounts', order: 2,
-          barPercentage: bar, categoryPercentage: cat
+          backgroundColor:(ctx)=>makeBarGradient(ctx,'error'),
+          borderWidth: 0,
+          yAxisID: 'yCounts', order: 2, barPercentage: bar, categoryPercentage: cat,
+          _gradType:'error'
         });
       }
     }
@@ -1030,17 +998,12 @@
       data: { labels, datasets },
       options: {
         responsive: true, maintainAspectRatio: false,
-        scales: {
-          x: { type: 'category',
-               ticks: { autoSkip: false, maxRotation: 45, minRotation: 45, color: TEXT_COLOR },
-               grid: { color: BORDER_COLOR }, border: { color: BORDER_COLOR } },
-          ...yAxes
-        },
-        plugins: {
-          legend: { position: 'top', ...legendRect() },
+        scales: { x: { type: 'category', ticks: { autoSkip: false, maxRotation: 45, minRotation: 45, color: TEXT_COLOR },
+                        grid: { color: BORDER_COLOR }, border: { color: BORDER_COLOR } },
+                 ...yAxes },
+        plugins: { legend: { position: 'top', ...legendRect() },
           tooltip: { callbacks: { title: c => { const i = c[0].dataIndex; const dt = d[i].dt; return `#${i + 1} — ${dt.toISOString().replace('T', ' ').slice(0, 19)}` } } },
-          zoom: zoomOpts
-        }
+          zoom: zoomOpts }
       }
     });
   })();
@@ -1056,32 +1019,15 @@
     const diff = diffEl ? diffEl.value : 'all';
     if (d && diff !== 'all') d = d.filter(s => s.difficulty === diff);
 
-    if (!d || !d.length) {
-      c.getContext('2d').clearRect(0,0,c.width,c.height);
-      document.getElementById('chart-container-snowflakes').style.display = 'none';
-      return;
-    }
+    if (!d || !d.length) { c.getContext('2d').clearRect(0,0,c.width,c.height); document.getElementById('chart-container-snowflakes').style.display = 'none'; return; }
     document.getElementById('chart-container-snowflakes').style.display = 'block';
 
     const toNum = v => (v==null ? 0 : (typeof v === 'number' ? v : Number(v)||0));
-
-    const getCaught = s => {
-      const c  = toNum(s.caught);
-      const ok = toNum(s.correct);
-      return c > 0 ? c : ok;
-    };
-    const getMissed = s => {
-      const m   = toNum(s.missed);
-      const inc = toNum(s.incorrect);
-      const er  = toNum(s.errors);
-      return m > 0 ? m : (inc > 0 ? inc : er);
-    };
+    const getCaught = s => { const c  = toNum(s.caught); const ok = toNum(s.correct); return c > 0 ? c : ok; };
+    const getMissed = s => { const m   = toNum(s.missed); const inc = toNum(s.incorrect); const er  = toNum(s.errors); return m > 0 ? m : (inc > 0 ? inc : er); };
 
     const labels = d.map(s => oneLineLabel(s.dt));
-
-    const ttfChk =
-      (document.getElementById('toggle-ttf')?.checked ?? false) ||
-      (document.getElementById('chkTTF')?.checked ?? false);
+    const ttfChk = (document.getElementById('toggle-ttf')?.checked ?? false) || (document.getElementById('chkTTF')?.checked ?? false);
     const showTTF = ttfChk && d.some(s => toNum(s.ttf) > 0);
 
     const datasets = [];
@@ -1090,31 +1036,24 @@
 
     const yMaxTime = Math.max(1, ...d.map(s => toNum(s.duration)), ...(showTTF ? d.map(s => toNum(s.ttf)) : []));
     const timeAxis = axis(yMaxTime);
-    yAxes.yTime = {
-      type:'linear', position:'right', beginAtZero:true,
-      suggestedMax: timeAxis.max,
-      ticks:{ stepSize: timeAxis.step, color: TEXT_COLOR },
-      grid:{ drawOnChartArea:false }, border:{ color: BORDER_COLOR }
-    };
+    yAxes.yTime = { type:'linear', position:'right', beginAtZero:true,
+      suggestedMax: timeAxis.max, ticks:{ stepSize: timeAxis.step, color: TEXT_COLOR },
+      grid:{ drawOnChartArea:false }, border:{ color: BORDER_COLOR } };
 
     datasets.push({
-      type:'line',
-      label:'Длительность, с',
-      data:d.map(s=>toNum(s.duration)),
-      borderColor:COLOR.Snowflakes,
-      backgroundColor:COLOR.Snowflakes,
-      pointRadius:3, tension:0.2,
-      yAxisID:'yTime', order:1
+      type:'line', label:'Длительность, с', data:d.map(s=>toNum(s.duration)),
+      borderColor:(ctx)=>makeLineGradient(ctx,'duration'),
+      backgroundColor:(ctx)=>makeLineGradient(ctx,'duration'),
+      pointRadius:3, tension:0.2, yAxisID:'yTime', order:1, _gradType:'duration'
     });
 
     if (showTTF) {
       datasets.push({
-        type:'line',
-        label:'Время до первого выбора, с',
+        type:'line', label:'Время до первого выбора, с',
         data:d.map(s => s.ttf==null ? null : toNum(s.ttf)),
-        borderColor:COLOR.TTF, backgroundColor:COLOR.TTF,
-        borderDash:[6,4], pointRadius:3, tension:0.2,
-        yAxisID:'yTime', order:0
+        borderColor:(ctx)=>makeLineGradient(ctx,'ttf'),
+        backgroundColor:(ctx)=>makeLineGradient(ctx,'ttf'),
+        borderDash:[6,4], pointRadius:3, tension:0.2, yAxisID:'yTime', order:0, _gradType:'ttf'
       });
     }
 
@@ -1122,19 +1061,16 @@
       const dataCaughtEasy = d.map(s => s.difficulty === 'easy' ? getCaught(s) : null);
       const yMaxCountsEasy = Math.max(1, ...dataCaughtEasy.filter(v=>v!=null).map(v=>toNum(v)));
       const countAxisEasy = axis(yMaxCountsEasy);
-      yAxes.yCounts = {
-        type:'linear', position:'left', beginAtZero:true,
-        suggestedMax: countAxisEasy.max,
-        ticks:{ stepSize: countAxisEasy.step, color: TEXT_COLOR },
-        grid:{ color: BORDER_COLOR }, border:{ color: BORDER_COLOR }
-      };
+      yAxes.yCounts = { type:'linear', position:'left', beginAtZero:true,
+        suggestedMax: countAxisEasy.max, ticks:{ stepSize: countAxisEasy.step, color: TEXT_COLOR },
+        grid:{ color: BORDER_COLOR }, border:{ color: BORDER_COLOR } };
 
       datasets.push({
         label:'Поймано (лёгкий)',
         data:dataCaughtEasy,
-        backgroundColor: COLOR.Snowflakes,
-        yAxisID:'yCounts', order:2,
-        barPercentage:bar, categoryPercentage:cat
+        backgroundColor:(ctx)=>makeBarGradient(ctx,'correct'),
+        borderWidth: 0,
+        yAxisID:'yCounts', order:2, barPercentage:bar, categoryPercentage:cat, _gradType:'correct'
       });
     }
 
@@ -1146,33 +1082,26 @@
       const missed = d.map((s,i) => hardMask[i] ? getMissed(s) : null);
 
       if (!yAxes.yCounts) {
-        const yMaxCounts = Math.max(
-          1,
-          ...caught.filter(v=>v!=null).map(v=>toNum(v)),
-          ...missed.filter(v=>v!=null).map(v=>toNum(v))
-        );
+        const yMaxCounts = Math.max(1, ...caught.filter(v=>v!=null).map(v=>toNum(v)), ...missed.filter(v=>v!=null).map(v=>toNum(v)));
         const countAxis = axis(yMaxCounts);
-        yAxes.yCounts = {
-          type:'linear', position:'left', beginAtZero:true,
-          suggestedMax: countAxis.max,
-          ticks:{ stepSize: countAxis.step, color: TEXT_COLOR },
-          grid:{ color: BORDER_COLOR }, border:{ color: BORDER_COLOR }
-        };
+        yAxes.yCounts = { type:'linear', position:'left', beginAtZero:true,
+          suggestedMax: countAxis.max, ticks:{ stepSize: countAxis.step, color: TEXT_COLOR },
+          grid:{ color: BORDER_COLOR }, border:{ color: BORDER_COLOR } };
       }
 
       datasets.push({
         label:'Поймано (сложный)',
         data: caught,
-        backgroundColor: COLOR.SnowflakesAlt,
-        yAxisID:'yCounts', order:2,
-        barPercentage:bar, categoryPercentage:cat
+        backgroundColor:(ctx)=>makeBarGradient(ctx,'correct'),
+        borderWidth: 0,
+        yAxisID:'yCounts', order:2, barPercentage:bar, categoryPercentage:cat, _gradType:'correct'
       });
       datasets.push({
         label:'Пропущено (сложный)',
         data: missed,
-        backgroundColor: COLOR.SnowflakesMissed,
-        yAxisID:'yCounts', order:2,
-        barPercentage:bar, categoryPercentage:cat
+        backgroundColor:(ctx)=>makeBarGradient(ctx,'missed'),
+        borderWidth: 0,
+        yAxisID:'yCounts', order:2, barPercentage:bar, categoryPercentage:cat, _gradType:'missed'
       });
     }
 
@@ -1181,22 +1110,11 @@
       data:{ labels, datasets },
       options:{
         responsive:true, maintainAspectRatio:false,
-        scales:{
-          x:{ type:'category', ticks:{ autoSkip:false, maxRotation:45, minRotation:45, color:TEXT_COLOR }, grid:{ color:BORDER_COLOR }, border:{ color:BORDER_COLOR } },
-          ...yAxes
-        },
-        plugins:{
-          legend:{ position:'top', ...legendRect() },
-          tooltip:{
-            callbacks:{
-              title:c=>{ const i=c[0].dataIndex; const dt=d[i].dt; return `#${i+1} — ${dt.toISOString().replace('T',' ').slice(0,19)}`; },
-              label:c=> c.dataset.yAxisID==='yTime'
-                ? `${c.dataset.label}: ${Number(c.parsed.y).toFixed(2)}`
-                : `${c.dataset.label}: ${c.parsed.y}`
-            }
-          },
-          zoom: zoomOpts
-        }
+        scales:{ x:{ type:'category', ticks:{ autoSkip:false, maxRotation:45, minRotation:45, color:TEXT_COLOR }, grid:{ color:BORDER_COLOR }, border:{ color: BORDER_COLOR } }, ...yAxes },
+        plugins:{ legend:{ position:'top', ...legendRect() },
+          tooltip:{ callbacks:{ title:c=>{ const i=c[0].dataIndex; const dt=d[i].dt; return `#${i+1} — ${dt.toISOString().replace('T',' ').slice(0,19)}`; },
+            label:c=> c.dataset.yAxisID==='yTime' ? `${c.dataset.label}: ${Number(c.parsed.y).toFixed(2)}` : `${c.dataset.label}: ${c.parsed.y}` } },
+          zoom: zoomOpts }
       }
     });
   })();
@@ -1209,16 +1127,16 @@
     if(charts.memoryChart) charts.memoryChart.destroy();
 
     const diff = document.querySelector('input[name="memoryDiff"]:checked').value;
-    if(d && diff !== 'all') d = d.filter(s => String(s.difficulty) === String(diff));
-    
-    if(!d||!d.length){
-      c.getContext('2d').clearRect(0,0,c.width,c.height);
-      document.getElementById('chart-container-memory').style.display = 'none';
-      return;
+    if(d && diff !== 'all') {
+      d = d.filter(s => {
+        const sDiff = s.difficulty === '4' ? 'easy' : (s.difficulty === '12' ? 'hard' : s.difficulty);
+        return sDiff === diff;
+      });
     }
+    if(!d||!d.length){ c.getContext('2d').clearRect(0,0,c.width,c.height); document.getElementById('chart-container-memory').style.display = 'none'; return; }
     document.getElementById('chart-container-memory').style.display = 'block';
-    const cat=0.80;
-    const bar=1.00;
+
+    const cat=0.80, bar=1.00;
     const labels=d.map(s=>oneLineLabel(s.dt));
     const showTTF = ttfChecked && d.some(s => (s.ttf ?? 0) > 0);
 
@@ -1227,87 +1145,49 @@
 
     const yMaxTime = Math.max(1, ...d.map(s => s.duration), ...(showTTF ? d.map(s => s.ttf || 0) : []));
     const timeAxis = axis(yMaxTime);
-    yAxes.yTime = {
-        type: 'linear',
-        position: 'right',
-        beginAtZero: true,
-        suggestedMax: timeAxis.max,
-        ticks: { stepSize: timeAxis.step, color: TEXT_COLOR },
-        grid: { drawOnChartArea: false },
-        border: { color: BORDER_COLOR }
-    };
+    yAxes.yTime = { type: 'linear', position: 'right', beginAtZero: true, suggestedMax: timeAxis.max,
+        ticks: { stepSize: timeAxis.step, color: TEXT_COLOR }, grid: { drawOnChartArea: false }, border: { color: BORDER_COLOR } };
     datasets.push({
-        type: 'line',
-        label: 'Длительность, с',
-        data: d.map(s => s.duration),
-        borderColor: COLOR.MemoryMatchScene,
-        backgroundColor: COLOR.MemoryMatchScene,
-        pointRadius: 3,
-        tension: 0.2,
-        yAxisID: 'yTime',
-        order: 1
+        type: 'line', label: 'Длительность, с', data: d.map(s => s.duration),
+        borderColor:(ctx)=>makeLineGradient(ctx,'duration'),
+        backgroundColor:(ctx)=>makeLineGradient(ctx,'duration'),
+        pointRadius: 3, tension: 0.2, yAxisID: 'yTime', order: 1, _gradType:'duration'
     });
     if (showTTF) {
         datasets.push({
-            type: 'line',
-            label: 'Время до первого выбора, с',
-            data: d.map(s => s.ttf || null),
-            borderColor: COLOR.TTF,
-            backgroundColor: COLOR.TTF,
-            pointRadius: 3,
-            tension: 0.2,
-            yAxisID: 'yTime',
-            order: 0
+            type: 'line', label: 'Время до первого выбора, с', data: d.map(s => s.ttf || null),
+            borderColor:(ctx)=>makeLineGradient(ctx,'ttf'),
+            backgroundColor:(ctx)=>makeLineGradient(ctx,'ttf'),
+            pointRadius: 3, tension: 0.2, yAxisID: 'yTime', order: 0, borderDash:[6,4], _gradType:'ttf'
         });
     }
 
     const yMaxCounts = Math.max(1, ...d.map(s => Math.max(s.correctPairs || 0, s.errors || 0)));
     const countAxis = axis(yMaxCounts);
-    yAxes.yCounts = {
-        type: 'linear',
-        position: 'left',
-        beginAtZero: true,
-        suggestedMax: countAxis.max,
-        ticks: { stepSize: countAxis.step, color: TEXT_COLOR },
-        grid: { color: BORDER_COLOR },
-        border: { color: BORDER_COLOR }
-    };
+    yAxes.yCounts = { type: 'linear', position: 'left', beginAtZero: true, suggestedMax: countAxis.max,
+        ticks: { stepSize: countAxis.step, color: TEXT_COLOR }, grid: { color: BORDER_COLOR }, border: { color: BORDER_COLOR } };
     datasets.push({
-        label: 'Правильные пары',
-        data: d.map(s => s.correctPairs),
-        backgroundColor: COLOR.MemoryMatchScene,
-        yAxisID: 'yCounts',
-        order: 2,
-        barPercentage: bar,
-        categoryPercentage: cat
+        label: 'Правильные пары', data: d.map(s => s.correctPairs),
+        backgroundColor:(ctx)=>makeBarGradient(ctx,'correct'),
+        borderWidth: 0,
+        yAxisID: 'yCounts', order: 2, barPercentage: bar, categoryPercentage: cat, _gradType:'correct'
     });
     datasets.push({
-        label: 'Ошибки',
-        data: d.map(s => s.errors),
-        backgroundColor: COLOR.MemoryErr,
-        yAxisID: 'yCounts',
-        order: 2,
-        barPercentage: bar,
-        categoryPercentage: cat
+        label: 'Ошибки', data: d.map(s => s.errors),
+        backgroundColor:(ctx)=>makeBarGradient(ctx,'error'),
+        borderWidth: 0,
+        yAxisID: 'yCounts', order: 2, barPercentage: bar, categoryPercentage: cat, _gradType:'error'
     });
 
     charts.memoryChart=new Chart(c.getContext('2d'), {
-        type: 'bar',
-        data: { labels, datasets },
+        type: 'bar', data: { labels, datasets },
         options: {
-            responsive: true,
-            maintainAspectRatio: false,
-            scales: {
-                x: { type: 'category',
-                     ticks: { autoSkip: false, maxRotation: 45, minRotation: 45, color: TEXT_COLOR },
-                     grid: { color: BORDER_COLOR }, border: { color: BORDER_COLOR } },
-                ...yAxes
-            },
-            plugins: {
-                legend: { position: 'top', ...legendRect() },
+            responsive: true, maintainAspectRatio: false,
+            scales: { x: { type: 'category', ticks: { autoSkip: false, maxRotation: 45, minRotation: 45, color: TEXT_COLOR },
+                     grid: { color: BORDER_COLOR }, border: { color: BORDER_COLOR } }, ...yAxes },
+            plugins: { legend: { position: 'top', ...legendRect() },
                 tooltip: { callbacks: { title: c => { const i = c[0].dataIndex; const dt = d[i].dt; return `#${i + 1} — ${dt.toISOString().replace('T', ' ').slice(0, 19)}` } } },
-                zoom: zoomOpts
-            }
+                zoom: zoomOpts }
         }
     });
   })();
@@ -1319,43 +1199,39 @@
     const c = document.getElementById('fruitChart');
     if (charts.fruitChart) charts.fruitChart.destroy();
 
-    if (!d || !d.length) {
-      c.getContext('2d').clearRect(0,0,c.width,c.height);
-      document.getElementById('chart-container-fruit').style.display = 'none';
-      return;
-    }
+    const diffEl = document.querySelector('input[name="fruitDiff"]:checked');
+    const diff = diffEl ? diffEl.value : 'all';
+    if (d && diff !== 'all') d = d.filter(s => s.difficulty === diff);
+
+    if (!d || !d.length) { c.getContext('2d').clearRect(0,0,c.width,c.height); document.getElementById('chart-container-fruit').style.display = 'none'; return; }
     document.getElementById('chart-container-fruit').style.display = 'block';
 
     const labels = d.map(s => oneLineLabel(s.dt));
-
-    const ttfChk =
-      (document.getElementById('toggle-ttf')?.checked ?? false) ||
-      (document.getElementById('chkTTF')?.checked ?? false);
-    const showTTF = ttfChk && d.some(s => (s.ttf ?? 0) > 0);
+    const showTTF = ((document.getElementById('toggle-ttf')?.checked ?? false) || (document.getElementById('chkTTF')?.checked ?? false)) && d.some(s => (s.ttf ?? 0) > 0);
 
     const datasets = [];
     const yAxes = {};
-    const cat = 0.80;
-    const bar = 1.00;
+    const cat = 0.80, bar = 1.00;
 
-    const yMaxTime = Math.max(1, ...(showTTF ? d.map(s => s.ttf || 0) : [1]));
+    const yMaxTime = Math.max(1, ...d.map(s => s.duration || 0), ...(showTTF ? d.map(s => s.ttf || 0) : []));
     const timeAxis = axis(yMaxTime);
-    yAxes.yTime = {
-      type: 'linear', position: 'right', beginAtZero: true,
-      display: showTTF,
-      suggestedMax: timeAxis.max,
-      ticks: { stepSize: timeAxis.step, color: TEXT_COLOR },
-      grid: { drawOnChartArea: false }, border: { color: BORDER_COLOR }
-    };
+    yAxes.yTime = { type: 'linear', position: 'right', beginAtZero: true, display: true,
+      suggestedMax: timeAxis.max, ticks: { stepSize: timeAxis.step, color: TEXT_COLOR },
+      grid: { drawOnChartArea: false }, border: { color: BORDER_COLOR } };
+
+    datasets.push({
+      type: 'line', label: 'Длительность, с', data: d.map(s => s.duration || 0),
+      borderColor:(ctx)=>makeLineGradient(ctx,'duration'),
+      backgroundColor:(ctx)=>makeLineGradient(ctx,'duration'),
+      pointRadius: 3, tension: 0.2, yAxisID: 'yTime', order: 1, _gradType:'duration'
+    });
 
     if (showTTF) {
       datasets.push({
-        type: 'line',
-        label: 'Время до первого выбора, с',
-        data: d.map(s => s.ttf || null),
-        borderColor: COLOR.TTF, backgroundColor: COLOR.TTF,
-        pointRadius: 3, tension: 0.2,
-        yAxisID: 'yTime', order: 0
+        type: 'line', label: 'Время до первого выбора, с', data: d.map(s => s.ttf || null),
+        borderColor:(ctx)=>makeLineGradient(ctx,'ttf'),
+        backgroundColor:(ctx)=>makeLineGradient(ctx,'ttf'),
+        pointRadius: 3, tension: 0.2, borderDash: [6,4], yAxisID: 'yTime', order: 0, _gradType:'ttf'
       });
     }
 
@@ -1371,22 +1247,15 @@
       ...by(d.map((s,i) => isHard[i] ? (s.errors || s.incorrect || 0) : null))
     );
     const countAxis = axis(yMaxCounts);
-    yAxes.yCounts = {
-      type: 'linear', position: 'left', beginAtZero: true,
-      suggestedMax: countAxis.max,
-      ticks: { stepSize: countAxis.step, color: TEXT_COLOR },
-      grid: { color: BORDER_COLOR }, border: { color: BORDER_COLOR }
-    };
+    yAxes.yCounts = { type: 'linear', position: 'left', beginAtZero: true, suggestedMax: countAxis.max,
+      ticks: { stepSize: countAxis.step, color: TEXT_COLOR }, grid: { color: BORDER_COLOR }, border: { color: BORDER_COLOR } };
 
     const dataScoreEasy = d.map((s,i) => isEasy[i] ? (s.score || 0) : null);
     datasets.push({
-      label: 'Очки (лёг.)',
-      data: dataScoreEasy,
-      backgroundColor: COLOR.FrutGame,
-      yAxisID: 'yCounts',
-      order: 2,
-      barPercentage: bar,
-      categoryPercentage: cat
+      label: 'Очки (лёг.)', data: dataScoreEasy,
+      backgroundColor:(ctx)=>makeBarGradient(ctx,'correct'),
+      borderWidth: 0,
+      yAxisID: 'yCounts', order: 2, barPercentage: bar, categoryPercentage: cat, _gradType:'correct'
     });
 
     const dataSlicedHard = d.map((s,i) => isHard[i] ? (s.score || 0) : null);
@@ -1394,31 +1263,22 @@
     const dataErrorsHard = d.map((s,i) => isHard[i] ? (s.errors || s.incorrect || 0) : null);
 
     datasets.push({
-      label: 'Разрезано (сложн.)',
-      data: dataSlicedHard,
-      backgroundColor: COLOR.FrutSliced,
-      yAxisID: 'yCounts',
-      order: 2,
-      barPercentage: bar,
-      categoryPercentage: cat
+      label: 'Разрезано (сложн.)', data: dataSlicedHard,
+      backgroundColor:(ctx)=>makeBarGradient(ctx,'correct'),
+      borderWidth: 0,
+      yAxisID: 'yCounts', order: 2, barPercentage: bar, categoryPercentage: cat, _gradType:'correct'
     });
     datasets.push({
-      label: 'Пропущено (сложн.)',
-      data: dataMissedHard,
-      backgroundColor: COLOR.FrutMissed,
-      yAxisID: 'yCounts',
-      order: 2,
-      barPercentage: bar,
-      categoryPercentage: cat
+      label: 'Пропущено (сложн.)', data: dataMissedHard,
+      backgroundColor:(ctx)=>makeBarGradient(ctx,'missed'),
+      borderWidth: 0,
+      yAxisID: 'yCounts', order: 2, barPercentage: bar, categoryPercentage: cat, _gradType:'missed'
     });
     datasets.push({
-      label: 'Ошибки (сложн.)',
-      data: dataErrorsHard,
-      backgroundColor: COLOR.FrutErr,
-      yAxisID: 'yCounts',
-      order: 2,
-      barPercentage: bar,
-      categoryPercentage: cat
+      label: 'Ошибки (сложн.)', data: dataErrorsHard,
+      backgroundColor:(ctx)=>makeBarGradient(ctx,'error'),
+      borderWidth: 0,
+      yAxisID: 'yCounts', order: 2, barPercentage: bar, categoryPercentage: cat, _gradType:'error'
     });
 
     charts.fruitChart = new Chart(c.getContext('2d'), {
@@ -1426,61 +1286,32 @@
       data: { labels, datasets },
       options: {
         responsive: true, maintainAspectRatio: false,
-        scales: {
-          x: { type: 'category',
-               ticks: { autoSkip: false, maxRotation: 45, minRotation: 45, color: TEXT_COLOR },
-               grid: { color: BORDER_COLOR }, border: { color: BORDER_COLOR } },
-          ...yAxes
-        },
-        plugins: {
-          legend: { position: 'top', ...legendRect() },
-          tooltip: { callbacks: { title: c => {
-            const i = c[0].dataIndex;
-            const dt = d[i].dt;
-            return `#${i+1} — ${dt.toISOString().replace('T',' ').slice(0,19)}`;
-          }}},
-          zoom: zoomOpts
-        }
+        scales: { x: { type: 'category', ticks: { autoSkip: false, maxRotation: 45, minRotation: 45, color: TEXT_COLOR },
+                 grid: { color: BORDER_COLOR }, border: { color: BORDER_COLOR } }, ...yAxes },
+        plugins: { legend: { position: 'top', ...legendRect() },
+          tooltip: { callbacks: { title: c => { const i = c[0].dataIndex; const dt = d[i].dt; return `#${i+1} — ${dt.toISOString().replace('T',' ').slice(0,19)}`; } } },
+          zoom: zoomOpts }
       }
     });
   })();
 
     }
 
-    function applyFiltersAndRender(){
-      const f = getFilteredSessions();
-      const totals = computeTotals(f);
-      renderSummary(totals);
-      renderCharts(f);
-    }
+    function applyFiltersAndRender(){ const f = getFilteredSessions(); const totals = computeTotals(f); renderSummary(totals); renderCharts(f); }
 
     function exportCSV(){
       const f = getFilteredSessions();
       let csv = 'Игра,Уровень,Дата и время,Длительность (сек),Время до первого выбора (сек),Правильные,Ошибки,Пропущенные,Пойманные,Пары,Очки\n';
-      
       const gids = Object.keys(f);
-
       gids.forEach(gid => {
         const sessions = f[gid] || [];
         sessions.forEach(s => {
           const dateStr = s.dt.toISOString().replace('T', ' ').slice(0, 19);
-          const row = [
-            NAME[gid],
-            s.difficulty || '',
-            dateStr,
-            s.duration || 0,
-            s.ttf || 0,
-            s.correct || '',
-            s.errors || s.incorrect || '',
-            s.missed || '',
-            s.caught || '',
-            s.correctPairs || '',
-            s.score || ''
-          ];
+          const row = [ NAME[gid], s.difficulty || '', dateStr, s.duration || 0, s.ttf || 0,
+            s.correct || '', s.errors || s.incorrect || '', s.missed || '', s.caught || '', s.correctPairs || '', s.score || '' ];
           csv += row.join(',') + '\n';
         });
       });
-      
       const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
       const link = document.createElement('a');
       link.href = URL.createObjectURL(blob);
